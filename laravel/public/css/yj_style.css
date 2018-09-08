@@ -1,0 +1,20 @@
+@import "https://fonts.googleapis.com/css?family=Muli";
+*{
+  font-family: "Muli",sans-serif;
+}
+.card.profile-card {
+	box-shadow: 0px 0px 8px #DFDFDF;
+	border: none;
+	border-radius: 0;
+}
+
+.img-profile {
+  	-webkit-clip-path: circle(30% at 50% 50%);
+  	clip-path: circle(30% at 50% 50%);
+  	transform: scale(1) translatez(0)
+  	height: 400px;
+	width: 400px;
+	margin:0 auto;
+	margin-bottom: -30px;
+	margin-top: -20px;
+}
