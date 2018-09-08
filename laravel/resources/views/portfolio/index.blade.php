@@ -24,7 +24,7 @@
 	 <div class="col-md-8 clearfix mx-auto">
 	 	<div class="card shadow">
 	 		<div class="card-header"><h3>Profile</h3></div>
-	 		<img src="/image/profile_happy.jpg" class="img-profile img-fluid z-depth-4">
+	 		<img src="/image/profile_happy.jpg" class="rounded-circle shadow-lg">
 	 		<div class="card-body text-center">
 	 			<p class="h2 card-title font-weight-bold">김블록</p>
 	 			<p class="h6 card-text text-muted">부산대학교</p>

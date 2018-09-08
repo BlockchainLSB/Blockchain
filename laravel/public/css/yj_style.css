@@ -8,16 +8,12 @@
 	border-radius: 0;
 }
 
-.img-profile {
-  	-webkit-clip-path: circle(30% at 50% 50%);
-  	clip-path: circle(30% at 50% 50%);
-  	transform: scale(1) translatez(0)
-  	height: 400px;
-	width: 400px;
+.rounded-circle {
+	width: 200px;
+	height: 200px;
 	margin:0 auto;
-	margin-bottom: -30px;
-	margin-top: -20px;
-	box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3); 
+	margin-top: 20px;
+	box-shadow: 0 8px 20px -6px black;
 }
 /*
 .circle {
