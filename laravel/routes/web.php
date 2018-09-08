@@ -18,3 +18,19 @@ Route::get('/', function () {
 Route::get('/portfolio', function () {
 	return view('portfolio/index');
 });
+
+Route::get('/project', function(){
+	return view('project/index');
+});
+
+Route::get('/project/repository/description', function(){
+	return view('project/repository/descriptionx');
+});
+
+Route::get('/project/repository/commit', function(){
+	return view('project/repository/commit');
+});
+
+Route::get('/project/repository/contributor', function(){
+	return view('project/repository/contributor');
+});
