@@ -1,6 +1,6 @@
-@extends('layouts.repository')
+@extends('layouts.project')
 
-@section('repository_content')
+@section('project')
 
             <div class="card">
                 <div class="card-header">Description</div>

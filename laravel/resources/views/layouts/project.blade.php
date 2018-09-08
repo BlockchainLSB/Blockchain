@@ -28,7 +28,7 @@
 				
             </div>
         <div class="col-md-10 mb-5">
-                 @yield('repository_content')
+                 @yield('project')
             
         </div>
     </div>
