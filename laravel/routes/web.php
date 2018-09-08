@@ -34,3 +34,7 @@ Route::get('/project/repository/commit', function(){
 Route::get('/project/repository/contributor', function(){
 	return view('project/repository/contributor');
 });
+
+Route::get('/static', function () {
+    return view('/project/static');
+});
