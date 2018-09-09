@@ -1,0 +1,107 @@
+#
+# Copyright Altoros. All Rights Reserved.
+#
+
+version: '2'
+
+services:
+
+  ca.develop.infosec.pusan.ac.kr:
+    container_name: ca.develop.infosec.pusan.ac.kr
+    image: hyperledger/fabric-ca:x86_64-1.0.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.develop.infosec.pusan.ac.kr-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/e616af11e502874be4ddf63250add5bf08c4479b09fd7f6c5fe49de5d7b6e232_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.develop.infosec.pusan.ac.kr-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/e616af11e502874be4ddf63250add5bf08c4479b09fd7f6c5fe49de5d7b6e232_sk
+#    ports:
+#      - 7054:7054
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ../artifacts/crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ../artifacts/fabric-ca-server-config-develop.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+
+  peer0.develop.infosec.pusan.ac.kr:
+    container_name: peer0.develop.infosec.pusan.ac.kr
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.develop.infosec.pusan.ac.kr
+      - CORE_PEER_LOCALMSPID=developMSP
+      - CORE_PEER_ADDRESS=peer0.develop.infosec.pusan.ac.kr:7051
+    ports:
+      - 7051:7051
+      - 7053:7053
+    volumes:
+        - ../artifacts/crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/peers/peer0.develop.infosec.pusan.ac.kr/:/etc/hyperledger/crypto/peer
+    depends_on:
+      - ca.develop.infosec.pusan.ac.kr
+    
+
+  peer1.develop.infosec.pusan.ac.kr:
+    container_name: peer1.develop.infosec.pusan.ac.kr
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.develop.infosec.pusan.ac.kr
+      - CORE_PEER_LOCALMSPID=developMSP
+      - CORE_PEER_ADDRESS=peer1.develop.infosec.pusan.ac.kr:7051
+    ports:
+      - 7056:7051
+      - 7058:7053
+    volumes:
+        - ../artifacts/crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/peers/peer1.develop.infosec.pusan.ac.kr/:/etc/hyperledger/crypto/peer
+    depends_on:
+      - ca.develop.infosec.pusan.ac.kr
+    
+
+  # fabric-rest api server
+  api.develop.infosec.pusan.ac.kr:
+    extends:
+      file: base.yaml
+      service: api-base
+    container_name: api.develop.infosec.pusan.ac.kr
+    ports:
+      - 4000:4000
+    environment:
+      - ORG=develop
+      - PORT=4000
+    depends_on:
+      - peer0.develop.infosec.pusan.ac.kr
+      - peer1.develop.infosec.pusan.ac.kr
+    
+
+  cli.infosec.pusan.ac.kr:
+    container_name: cli.infosec.pusan.ac.kr
+    extends:
+      file: base.yaml
+      service: cli-base
+    volumes:
+      - ../artifacts/crypto-config/ordererOrganizations/infosec.pusan.ac.kr/orderers/orderer.infosec.pusan.ac.kr/tls:/etc/hyperledger/crypto/orderer/tls
+
+  cli.develop.infosec.pusan.ac.kr:
+    container_name: cli.develop.infosec.pusan.ac.kr
+    extends:
+      service: cli.infosec.pusan.ac.kr
+    environment:
+      - CORE_PEER_LOCALMSPID=developMSP
+    volumes:
+        - ../artifacts/crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/users/Admin@develop.infosec.pusan.ac.kr:/etc/hyperledger/crypto/peer
+    depends_on:
+      - peer0.develop.infosec.pusan.ac.kr
+      - peer1.develop.infosec.pusan.ac.kr
+      - www.develop.infosec.pusan.ac.kr
+    
+
+  # simple http server to disseminate certificates
+  www.develop.infosec.pusan.ac.kr:
+    extends:
+      file: base.yaml
+      service: www-base
+    container_name: www.develop.infosec.pusan.ac.kr
+    ports:
+      - 8081:80

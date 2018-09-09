@@ -1,0 +1,75 @@
+{
+	"network-config": {
+		"orderer": {
+			"url": "grpcs://orderer.infosec.pusan.ac.kr:7050",
+			"server-hostname": "orderer.infosec.pusan.ac.kr",
+			"tls_cacerts": "crypto-config/ordererOrganizations/infosec.pusan.ac.kr/orderers/orderer.infosec.pusan.ac.kr/tls/ca.crt"
+		},
+
+		"develop": {
+			"name":  "peerdevelop",
+			"mspid": "developMSP",
+			"ca": "https://ca.develop.infosec.pusan.ac.kr:7054",
+			"peer0": {
+				"requests": "grpcs://peer0.develop.infosec.pusan.ac.kr:7051",
+				"events": 	"grpcs://peer0.develop.infosec.pusan.ac.kr:7053",
+				"server-hostname": "peer0.develop.infosec.pusan.ac.kr",
+				"tls_cacerts": "crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/peers/peer0.develop.infosec.pusan.ac.kr/tls/ca.crt"
+			},
+			"peer1": {
+				"requests": "grpcs://peer1.develop.infosec.pusan.ac.kr:7051",
+				"events":   "grpcs://peer1.develop.infosec.pusan.ac.kr:7053",
+				"server-hostname": "peer1.develop.infosec.pusan.ac.kr",
+				"tls_cacerts": "crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/peers/peer1.develop.infosec.pusan.ac.kr/tls/ca.crt"
+			},
+			"admin": {
+				"key":  "crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/users/Admin@develop.infosec.pusan.ac.kr/msp/keystore",
+				"cert": "crypto-config/peerOrganizations/develop.infosec.pusan.ac.kr/users/Admin@develop.infosec.pusan.ac.kr/msp/signcerts"
+			}
+		},
+
+		"research": {
+			"name":  "peerresearch",
+			"mspid": "researchMSP",
+			"ca": "https://ca.research.infosec.pusan.ac.kr:7054",
+			"peer0": {
+				"requests": "grpcs://peer0.research.infosec.pusan.ac.kr:7051",
+				"events":   "grpcs://peer0.research.infosec.pusan.ac.kr:7053",
+				"server-hostname": "peer0.research.infosec.pusan.ac.kr",
+				"tls_cacerts": "crypto-config/peerOrganizations/research.infosec.pusan.ac.kr/peers/peer0.research.infosec.pusan.ac.kr/tls/ca.crt"
+			},
+			"peer1": {
+				"requests": "grpcs://peer1.research.infosec.pusan.ac.kr:7051",
+				"events":   "grpcs://peer1.research.infosec.pusan.ac.kr:7053",
+				"server-hostname": "peer1.research.infosec.pusan.ac.kr",
+				"tls_cacerts": "crypto-config/peerOrganizations/research.infosec.pusan.ac.kr/peers/peer1.research.infosec.pusan.ac.kr/tls/ca.crt"
+			},
+			"admin": {
+				"key":  "crypto-config/peerOrganizations/research.infosec.pusan.ac.kr/users/Admin@research.infosec.pusan.ac.kr/msp/keystore",
+				"cert": "crypto-config/peerOrganizations/research.infosec.pusan.ac.kr/users/Admin@research.infosec.pusan.ac.kr/msp/signcerts"
+			}
+		},
+
+		"service": {
+			"name":  "peerservice",
+			"mspid": "serviceMSP",
+			"ca": "https://ca.service.infosec.pusan.ac.kr:7054",
+			"peer0": {
+				"requests": "grpcs://peer0.service.infosec.pusan.ac.kr:7051",
+				"events":   "grpcs://peer0.service.infosec.pusan.ac.kr:7053",
+				"server-hostname": "peer0.service.infosec.pusan.ac.kr",
+				"tls_cacerts": "crypto-config/peerOrganizations/service.infosec.pusan.ac.kr/peers/peer0.service.infosec.pusan.ac.kr/tls/ca.crt"
+			},
+			"peer1": {
+				"requests": "grpcs://peer1.service.infosec.pusan.ac.kr:7051",
+				"events":   "grpcs://peer1.service.infosec.pusan.ac.kr:7053",
+				"server-hostname": "peer1.service.infosec.pusan.ac.kr",
+				"tls_cacerts": "crypto-config/peerOrganizations/service.infosec.pusan.ac.kr/peers/peer1.service.infosec.pusan.ac.kr/tls/ca.crt"
+			},
+			"admin": {
+				"key":  "crypto-config/peerOrganizations/service.infosec.pusan.ac.kr/users/Admin@service.infosec.pusan.ac.kr/msp/keystore",
+				"cert": "crypto-config/peerOrganizations/service.infosec.pusan.ac.kr/users/Admin@service.infosec.pusan.ac.kr/msp/signcerts"
+			}
+		}
+	}
+}

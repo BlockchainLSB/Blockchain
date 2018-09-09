@@ -1,0 +1,5 @@
+stove:
+  servers:
+    -
+      name: "web"
+      port: 18080
