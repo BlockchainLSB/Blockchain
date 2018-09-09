@@ -38,3 +38,17 @@ Route::get('/project/repository/contributor', function(){
 Route::get('/static', function () {
     return view('/project/static');
 });
+
+
+Route::get('/evaluation', function () {
+    return view('/project/evaluation');
+});
+
+Route::get('/addproject', function () {
+    return view('/project/add');
+});
+
+Route::get('/register', function () {
+    return view('/register.index');
+});
+
