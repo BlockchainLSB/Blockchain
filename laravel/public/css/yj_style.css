@@ -28,4 +28,8 @@
 
 .num {
 	color: #398689;
-}     
+}
+
+thead, th {
+	background-color: #a7dda7;
+}

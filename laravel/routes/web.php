@@ -28,7 +28,7 @@ Route::get('/project', function(){
 });
 
 Route::get('/project/repository/description', function(){
-	return view('project/repository/descriptionx');
+	return view('project/repository/description');
 });
 
 Route::get('/project/repository/commit', function(){
