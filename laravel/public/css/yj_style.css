@@ -23,3 +23,8 @@
 .projects {
 	padding: 20px 10px 10px 20px;
 }
+
+.fa-chevron-circle-left,
+.fa-chevron-circle-right {
+	color: green;
+}     

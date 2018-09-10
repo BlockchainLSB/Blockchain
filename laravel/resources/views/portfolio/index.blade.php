@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">	 
-	 <div class="col-md-9 clearfix mx-auto p-bottom">
+	 <div class="col-md-9 clearfix mx-auto pb-4">
 	 	<div class="card shadow">
 	 		<div class="card-header"><h3>Profile</h3></div>
 	 		<img src="/image/profile_happy.jpg" class="rounded-circle ">
@@ -17,51 +17,101 @@
 	 </div>
 	 
 	 
- 	<div class="col-md-9 clearfix mx-auto">
+ 	<div class="col-md-9 clearfix mx-auto pb-4">
  		<div class="card shadow">
 	 		<div class="card-header"><h3>Project</h3></div>
-			<div class="carousel slide projects" data-ride="carousel">
-        		<div class="carousel-inner">
-            		<div class="carousel-item active">
+				
+  				<div class="carousel slide projects" data-ride="carousel" id="multi-project">
+  					
+  					<div class="controls-mid pb-2 text-center">
+    					<a class="btn-floating btn-lg" href="#multi-project" data-slide="prev"><i class="fa fa-chevron-circle-left"></i></a>
+    					<a class="btn-floating btn-lg" href="#multi-project" data-slide="next"><i class="fa fa-chevron-circle-right"></i></a>
+  					</div>
+  					
+    	      		<div class="carousel-inner pr-2">
+  	          		<div class="carousel-item active">
                 		<div class="row">
-                    		
                     		<div class="col-sm">
-                    			<div class="card border-success"><div class="card-body text-center">
-                    				<p class="h5 card-title font-weight-bold">BlockchainLSB</p>
-                    				<div class="row"><p class="h6 card-text text-secondary">10 commit</p></div>
-                    		
-                    				<a href="#" class="btn btn-success">Go</a>
+                    			<div class="card border-success "><div class="card-body text-center">
+                    				<p class="h5 card-title font-weight-bold">Project1</p>
+                    				<p class="h6 card-text text-secondary mt-3">블록체인 네트워크 구축</p>
+                    				<a href="#" class="btn btn-success mt-3">Go</a>
                 				</div></div>
                 			</div>
                 			
-                    		<div class="col-sm"><h4>Project2</h4></div>
-                    		<div class="col-sm"><h4>Project3</h4></div>
+                    		<div class="col-sm">	
+                    			<div class="card border-success"><div class="card-body text-center">
+                    				<p class="h5 card-title font-weight-bold">Project2</p>
+                    				<p class="h6 card-text text-secondary mt-3">길찾기 API 사용</p>
+                    				<a href="#" class="btn btn-success mt-3">Go</a>
+                				</div></div>
+            				</div>
+            				
+            				<div class="col-sm">	
+                    			<div class="card border-success"><div class="card-body text-center">
+                    				<p class="h5 card-title font-weight-bold">Project3</p>
+                    				<p class="h6 card-text text-secondary mt-3">머신러닝</p>
+                    				<a href="#" class="btn btn-success mt-3">Go</a>
+                				</div></div>
+            				</div>
                 		</div>
             		</div>
-            		<!--
-	            	<div class="carousel-item">
-	                	<div class="row">
-	                    	<div class="col-sm"><h4>Project4</h4></div>
-	                    	<div class="col-sm"><h4>Project5</h4></div>
-	                    	<div class="col-sm"><h4>Project6</h4></div>
-	                	</div>
-	            	</div>
-	            	-->
+            		
+            		<div class="carousel-item">
+                		<div class="row">
+                    		<div class="col-sm">
+                    			<div class="card border-success"><div class="card-body text-center">
+                    				<p class="h5 card-title font-weight-bold">Project4</p>
+                    				<p class="h6 card-text text-secondary mt-3">월월월</p>
+                    				<a href="#" class="btn btn-success mt-3">Go</a>
+                				</div></div>
+                			</div>
+                			
+                    		<div class="col-sm">	
+                    			<div class="card border-success"><div class="card-body text-center">
+                    				<p class="h5 card-title font-weight-bold">Project5</p>
+                    				<p class="h6 card-text text-secondary mt-3">10 commit</p>
+                    				<a href="#" class="btn btn-success mt-3">Go</a>
+                				</div></div>
+            				</div>
+            				
+            				<div class="col-sm">	
+                    			<div class="card border-success"><div class="card-body text-center">
+                    				<p class="h5 card-title font-weight-bold">Project6</p>
+                    				<p class="h6 card-text text-secondary mt-3">10 commit</p>
+                    				<a href="#" class="btn btn-success mt-3">Go</a>
+                				</div></div>
+            				</div>
+                		</div>
+            		</div>
+            		
         		</div>
  			</div>
  		</div>
  	</div>
- 	
-	 <!--
-	 <div class="col-md-6 clearfix lang-freq">
-	 	<div class="card shadow">
+ 	<div class="row pb-4">
+ 		<div class="col-md-5 clearfix mx-auto">
+ 			<div class="card shadow">
+	 			<div class="card-header"><h3>언어 사용 빈도</h3></div>
+	 		</div>
+	 	
 	 		<div class="card-body text-center">
-	 			<p class="h4 card-title font-weight-bold">언어 사용빈도</p>
 	 			<canvas id="lang-chart"></canvas>
 	 		</div>
 	 	</div>
+	 	
+	 	<div class="col-md-5 clearfix mx-auto">
+ 			<div class="card shadow">
+	 			<div class="card-header"><h3>기여도</h3></div>
+	 		</div>
+	 	
+	 		<div class="card-body text-center">
+	 			<canvas id="lang-chart"></canvas>
+	 		</div>
+	 	</div>
+	 	
 	 </div>
-	 -->
+ 	</div>
 </div>
 
-@endsection
+@endsection	
