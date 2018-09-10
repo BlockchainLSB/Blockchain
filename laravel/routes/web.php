@@ -19,6 +19,10 @@ Route::get('/portfolio', function () {
 	return view('portfolio/index');
 });
 
+Route::get('blockchain', function() {
+	return view('blockchain/index');	
+});
+
 Route::get('/project', function(){
 	return view('project/index');
 });
