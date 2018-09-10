@@ -89,57 +89,280 @@
  			</div>
  		</div>
  	</div>
- 	<div class="row pb-4">
+ 	
+ 	<div class="row ">
  		<div class="col-md-5 clearfix mx-auto">
- 			<div class="card shadow">
+ 			<div class="card h-100 shadow">
 	 			<div class="card-header"><h3>언어 사용 빈도</h3></div>
-	 		</div>
-	 	
-	 		<div class="card-body text-center">
-	 			<canvas id="lang-chart"></canvas>
+	 			<div class="card-body text-center">
+	 				<canvas id="lang-chart"></canvas>
+	 			</div>
 	 		</div>
 	 	</div>
 	 	
 	 	<div class="col-md-5 clearfix mx-auto">
- 			<div class="card shadow">
+ 			<div class="card h-100 shadow">
 	 			<div class="card-header"><h3>기여도</h3></div>
+	 			<div class="card-body pt-5">
+	 				<div class="row">
+ 						<p class="h6 card-text text-muted mx-auto">평균commit 수</p>
+ 						<p class="h6 card-text text-muted mx-auto">총commit 수</p>
+	 				</div>
+	 				
+	 				<div class="row">
+ 						<p class="h1 mx-auto pl-4 num" id="tot-commit">582</p>
+ 						<p class="h1 mx-auto pl-3 num" id="avg-commit">2341</p>
+	 				</div>
+	 			</div>
 	 		</div>
+	 	</div>
 	 	
-	 		<div class="card-body text-center">
-	 			<canvas id="lang-chart"></canvas>
-	 		</div>
+	 	<div class="col-md-11 clearfix mx-auto mt-4">
+	 		<div class="card shadow">
+		 		<div class="card-header"><h3>자격증</h3></div>
+		 		<div class="card-body text-center">
+		 			<div class="row">
+		 				<div class="col">
+		 					<p class="h6 card-text text-muted mx-auto">TOEIC</p>
+		 					<canvas id="toeic-chart"></canvas>
+		 				</div>
+		 				
+		 				<div class="col">
+		 					<p class="h6 card-text text-muted mx-auto">TOPCIT</p>
+		 					<canvas id="topcit-chart"></canvas>
+		 				</div>
+						
+						<div class="col">
+		 					<p class="h6 card-text text-muted mx-auto">TOEIC SPEAKING</p>
+		 					<canvas id="toeicsp-chart"></canvas>
+		 				</div> 			
+	 				</div>
+	 			</div>
+		 	</div>
 	 	</div>
 	 	
 	 </div>
  	</div>
 </div>
 <script>
-		var config_path = {
-		                            type: 'pie',
-		                            data: {
-		                                datasets: [{
-		                                    data: [
-		                                        10, 20,
-		                                    ],
-		                                    backgroundColor: [
-		                                        '#B8937F',
-		                                        '#F4A3C0',
-		                                    ],
-		                                    label: 'Dataset 1'
-		                                }],
-		                                labels: [
-		                                    '최근 영상 보기',
-		                                    '검색하기',
-		                                ]
-		                            },
-		                            options: {
-		                                responsive: true
-		                            }
-		                        };
-	     window.onload = function() {
-                var ctx_path = document.getElementById('lang-chart').getContext('2d');
-                window.myPie = new Chart(ctx_path, config_path);
-            };    
+	var lang_config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    10, 20, 30, 10
+                ],
+                backgroundColor: [
+                    '#CEF19E',
+                    '#A7DDA7',
+                    '#78BE97',
+                    '#398689'
+                ],
+                label: 'lang-chart'
+            }],
+            labels: [
+                'Java',
+                'Go',
+                'C++',
+                'C'
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    
+    var toeic_config = {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    920,
+                    80
+                ],
+                backgroundColor: [
+                    '#78BE97',
+                    '#DEDEDE'              
+                ],
+                label: 'Toeic'
+            }],
+        },
+        options: {
+            responsive: true,
+            rotation: 1 * Math.PI,
+      		circumference: 1 * Math.PI,
+      		tooltips: {
+	            callbacks: {
+	                label: function(tooltipItem, data) {
+	                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+	
+	                    if (label && tooltipItem.index != 1) {
+	                        label += ': ';
+	                        label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
+	                    } else 
+	                    	tooltipItem.enabled = false;
+ 
+	                    return label;
+	                }
+	            }
+        	},        
+        	elements: {
+				center: {
+					text: '920',
+			        color: '#398689',
+			        fontStyle: 'Helvetica',
+			        sidePadding: 20 
+				}
+			}
+        }
+    };
+    
+    var topcit_config = {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    400,
+                    1000-400
+                ],
+                backgroundColor: [
+                    '#78BE97',
+                    '#DEDEDE'              
+                ],
+                label: 'topcit'
+            }],
+        },
+        options: {
+            responsive: true,
+            rotation: 1 * Math.PI,
+      		circumference: 1 * Math.PI,
+      		tooltips: {
+	            callbacks: {
+	                label: function(tooltipItem, data) {
+	                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+	
+	                    if (label && tooltipItem.index != 1) {
+	                        label += ': ';
+	                        label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
+	                    } else 
+	                    	tooltipItem.enabled = false;
+ 
+	                    return label;
+	                }
+	            }
+        	},        
+        	elements: {
+				center: {
+					text: '400',
+			        color: '#398689',
+			        fontStyle: 'bold',
+			        sidePadding: 20 
+				}
+			}
+        }
+    };
+    
+    var toeicsp_config = {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    700,
+                    300
+                ],
+                backgroundColor: [
+                    '#78BE97',
+                    '#DEDEDE'              
+                ],
+                label: 'Toeic-Speaking'
+            }],
+        },
+        options: {
+        	responsive: true,
+            rotation: 1 * Math.PI,
+      		circumference: 1 * Math.PI,
+      		tooltips: {
+	            callbacks: {
+	                label: function(tooltipItem, data) {
+	                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+	
+	                    if (label && tooltipItem.index != 1) {
+	                        label += ': ';
+	                        label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
+	                    } else 
+	                    	tooltipItem.enabled = false;
+ 
+	                    return label;
+	                }
+	            }
+    		},        
+        	elements: {
+				center: {
+					text: '700',
+			        color: '#398689',
+			        fontStyle: 'Helvetica',
+			        sidePadding: 20 
+				}
+			}
+        }
+    };
+    
+    Chart.pluginService.register({
+			beforeDraw: function (chart) {
+				if (chart.config.options.elements.center) {
+			        //Get ctx from string
+			        var ctx = chart.chart.ctx;
+			        
+							//Get options from the center object in options
+			        var centerConfig = chart.config.options.elements.center;
+			      	var fontStyle = centerConfig.fontStyle || 'Arial';
+					var txt = centerConfig.text;
+			        var color = centerConfig.color || '#000';
+			        var sidePadding = centerConfig.sidePadding || 20;
+			        var sidePaddingCalculated = (sidePadding/100) * (chart.innerRadius * 2)
+			        //Start with a base font of 30px
+			        ctx.font = "50px " + fontStyle;
+			        
+							//Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+			        var stringWidth = ctx.measureText(txt).width;
+			        var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+			
+			        // Find out how much the font can grow in width.
+			        var widthRatio = elementWidth / stringWidth;
+			        var newFontSize = Math.floor(30 * widthRatio);
+			        var elementHeight = (chart.innerRadius * 2);
+		
+			        // Pick a new font size so it will not be larger than the height of label.
+			        var fontSizeToUse = Math.min(newFontSize, elementHeight);
+			
+							//Set font settings to draw it correctly.
+			        ctx.textAlign = 'center';
+			        ctx.textBaseline = 'middle';
+			        var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+			        var centerY = ((chart.chartArea.top + chart.chartArea.bottom)/2 + 50);
+			        ctx.font = fontSizeToUse+"px " + fontStyle;
+			        ctx.fillStyle = color;
+			        
+			        //Draw text in center
+			        ctx.fillText(txt, centerX, centerY);
+				}
+		}
+	});
+		
+ 	window.onload = function() {
+    	var lang_path = document.getElementById('lang-chart').getContext('2d');
+    	window.myPie = new Chart(lang_path, lang_config);
+    	
+    	var toeic_path = document.getElementById('toeic-chart').getContext('2d');
+    	window.myPie = new Chart(toeic_path, toeic_config);
+    
+    	
+    	var ctx = document.getElementById('topcit-chart').getContext('2d');
+    	window.myPie = new Chart(ctx, topcit_config);
+    	
+    	var toeicsp_path = document.getElementById('toeicsp-chart').getContext('2d');
+    	window.myPie = new Chart(toeicsp_path, toeicsp_config);
+    };    
 </script>
 
 

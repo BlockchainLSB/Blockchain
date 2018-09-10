@@ -10,7 +10,7 @@
     <script src="/js/popper.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/Chart.js"></script>
-    <script src="js/Chart.bundle.js"></script>
+    <script src="/js/Chart.bundle.js"></script>
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
@@ -99,10 +99,5 @@
 	          @yield('content')    
 	    
 	    </div>
-<<<<<<< HEAD
-=======
-	    
-
->>>>>>> develop
 </body>
 </html>
