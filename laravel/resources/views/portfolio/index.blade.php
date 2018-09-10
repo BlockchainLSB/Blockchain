@@ -113,5 +113,34 @@
 	 </div>
  	</div>
 </div>
+<script>
+		var config_path = {
+		                            type: 'pie',
+		                            data: {
+		                                datasets: [{
+		                                    data: [
+		                                        10, 20,
+		                                    ],
+		                                    backgroundColor: [
+		                                        '#B8937F',
+		                                        '#F4A3C0',
+		                                    ],
+		                                    label: 'Dataset 1'
+		                                }],
+		                                labels: [
+		                                    '최근 영상 보기',
+		                                    '검색하기',
+		                                ]
+		                            },
+		                            options: {
+		                                responsive: true
+		                            }
+		                        };
+	     window.onload = function() {
+                var ctx_path = document.getElementById('lang-chart').getContext('2d');
+                window.myPie = new Chart(ctx_path, config_path);
+            };    
+</script>
+
 
 @endsection	
