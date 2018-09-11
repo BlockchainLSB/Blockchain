@@ -1,0 +1,24 @@
+extends ../layouts/project
+
+block project
+  .container.pl-7.pr-7
+    .col-md-12
+      .card
+        .card-header
+          | Add Project
+        .card-body
+          form(action='/project')
+            .form-group
+              label(for='project_name') Project Name
+              input#project_name.form-control(type='text', placeholder='Project Name')
+            .form-group
+              label(for='project_description') Project Description
+              input#project_desciption.form-control(type='text', placeholder='Project Description')
+            .form-group
+              label(for='project_contributor') Contributor
+              .input-group.mb-3
+                input.form-control(type='text', placeholder='Contributor')
+                .input-group-append
+                  button.btn.btn-secondary(type='button') search
+            button.btn.btn-secondary(type='submit') Add Project
+  
