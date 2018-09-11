@@ -1,0 +1,61 @@
+html(lang="ko")
+head
+  meta(http-equiv='Content-Type', content='text/html, charset=utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  link(href='https://fonts.googleapis.com/css?family=Poppins:300,500,600', rel='stylesheet')
+  script(src='/javascripts/jquery-3.3.1.min.js')
+  script(src='/javascripts/popper.min.js')
+  script(src='/javascripts/bootstrap.min.js')
+  script(src='/javascripts/Chart.js')
+  script(src='/javascripts/Chart.bundle.js')
+  link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+  link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700')
+  link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.3.1/css/all.css", integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU", crossorigin="anonymous")
+  link(rel='stylesheet', href='/stylesheets/bokyoung_style.css')
+  link(rel='stylesheet', href='/stylesheets/yj_style.css')
+  title Blockchain LSB
+header
+  nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+    .container
+      a.navbar-brand.js-scroll-trigger(href='#page-top') Blockchain LSB
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarResponsive.collapse.navbar-collapse
+        ul.navbar-nav.ml-auto
+          li.nav-item.dropdown
+            button.btn.btn-secondary(href='/#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
+              | Login
+            .dropdown-menu.p-3(style='width:200px')
+              form
+                .form-group
+                  .input-group.mb-1
+                    .input-group-prepend
+                      span.input-group-text ID  
+                    input.form-control(type='text', placeholder='ID')
+                  .input-group.mb-1
+                    .input-group-prepend
+                      span.input-group-text PW
+                    input.form-control(type='password', placeholder='Password')
+                  .input-group.mb-1
+                    .input-group-prepend.mr-2
+                      a.btn.btn-secondary(href='#') Login
+                    .input-group-append
+                      a.btn.btn-secondary(href='/register') Register
+          li.nav-item.dropdown
+            a.nav-link(data-toggle='dropdown')
+              i.fas.fa-search
+            .dropdown-menu.p-3(style='width:300px')
+              form
+                .form-group
+                  .input-group
+                    input.form-control(type='text', placeholder='Contributor')
+                    .input-group-append
+                      button.btn.btn-secondary(type='submit') Search;
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='#') Portfolio
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='/project') Project
+          li.nav-item
+            a.nav-link.js-scroll-trigger(href='#') Blockchain
+.content.mb-5
+  block content
