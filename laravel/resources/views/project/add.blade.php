@@ -22,11 +22,11 @@
 					  <div class="input-group mb-3">
 						  <input type="text" class="form-control" placeholder="Contributor">
 						  <div class="input-group-append">
-						    <button class="btn btn-secondary" type="button">찾기</button>
+						    <button class="btn btn-secondary" type="button">search</button>
 						  </div>
 						</div>
 				  </div>
-				  <button type="submit" class="btn btn-secondary">추가하기</button>
+				  <button type="submit" class="btn btn-secondary">SingUp</button>
 				</form>
         	</div>
         </div>

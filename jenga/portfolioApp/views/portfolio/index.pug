@@ -1,296 +1,297 @@
-| @extends(&apos;layouts.master&apos;)
-| @section(&apos;content&apos;)
-.container
-  .col-md-9.clearfix.mx-auto.pb-4
-    .card.shadow
-      .card-header
-        h3 Profile
-      img.rounded-circle(src='/image/profile_happy.jpg')
-      .card-body.text-center
-        p.h2.card-title.font-weight-bold &#xAE40;&#xBE14;&#xB85D;
-        p.h6.card-text.text-muted &#xBD80;&#xC0B0;&#xB300;&#xD559;&#xAD50;
-        p.h6.card-text.text-muted &#xC815;&#xBCF4;&#xCEF4;&#xD4E8;&#xD130;&#xACF5;&#xD559;
-        p.h6.card-text.text-muted hyper@pusan.ac.kr
-  .col-md-9.clearfix.mx-auto.pb-4
-    .card.shadow
-      .card-header
-        h3 Project
-      #multi-project.carousel.slide.projects(data-ride='carousel')
-        .controls-mid.pb-2.text-center
-          a.btn-floating.btn-lg(href='#multi-project', data-slide='prev')
-            i.fa.fa-chevron-circle-left
-          a.btn-floating.btn-lg(href='#multi-project', data-slide='next')
-            i.fa.fa-chevron-circle-right
-        .carousel-inner.pr-2
-          .carousel-item.active
-            .row
-              .col-sm
-                .card.border-success
-                  .card-body.text-center
-                    p.h5.card-title.font-weight-bold Project1
-                    p.h6.card-text.text-secondary.mt-3 &#xBE14;&#xB85D;&#xCCB4;&#xC778; &#xB124;&#xD2B8;&#xC6CC;&#xD06C; &#xAD6C;&#xCD95;
-                    a.btn.btn-success.mt-3(href='#') Go
-              .col-sm
-                .card.border-success
-                  .card-body.text-center
-                    p.h5.card-title.font-weight-bold Project2
-                    p.h6.card-text.text-secondary.mt-3 &#xAE38;&#xCC3E;&#xAE30; API &#xC0AC;&#xC6A9;
-                    a.btn.btn-success.mt-3(href='#') Go
-              .col-sm
-                .card.border-success
-                  .card-body.text-center
-                    p.h5.card-title.font-weight-bold Project3
-                    p.h6.card-text.text-secondary.mt-3 &#xBA38;&#xC2E0;&#xB7EC;&#xB2DD;
-                    a.btn.btn-success.mt-3(href='#') Go
-          .carousel-item
-            .row
-              .col-sm
-                .card.border-success
-                  .card-body.text-center
-                    p.h5.card-title.font-weight-bold Project4
-                    p.h6.card-text.text-secondary.mt-3 &#xC6D4;&#xC6D4;&#xC6D4;
-                    a.btn.btn-success.mt-3(href='#') Go
-              .col-sm
-                .card.border-success
-                  .card-body.text-center
-                    p.h5.card-title.font-weight-bold Project5
-                    p.h6.card-text.text-secondary.mt-3 10 commit
-                    a.btn.btn-success.mt-3(href='#') Go
-              .col-sm
-                .card.border-success
-                  .card-body.text-center
-                    p.h5.card-title.font-weight-bold Project6
-                    p.h6.card-text.text-secondary.mt-3 10 commit
-                    a.btn.btn-success.mt-3(href='#') Go
-  .row
-    .col-md-5.clearfix.mx-auto
-      .card.h-100.shadow
-        .card-header
-          h3 &#xC5B8;&#xC5B4; &#xC0AC;&#xC6A9; &#xBE48;&#xB3C4;
-        .card-body.text-center
-          canvas#lang-chart
-    .col-md-5.clearfix.mx-auto
-      .card.h-100.shadow
-        .card-header
-          h3 &#xAE30;&#xC5EC;&#xB3C4;
-        .card-body.pt-5
-          .row
-            p.h6.card-text.text-muted.mx-auto &#xD3C9;&#xADE0;commit &#xC218;
-            p.h6.card-text.text-muted.mx-auto &#xCD1D;commit &#xC218;
-          .row
-            p#tot-commit.h1.mx-auto.pl-4.num 582
-            p#avg-commit.h1.mx-auto.pl-3.num 2341
-    .col-md-11.clearfix.mx-auto.mt-4
+extends ../layouts/master
+
+block content
+  .container
+    .col-md-9.clearfix.mx-auto.pb-4
       .card.shadow
         .card-header
-          h3 &#xC790;&#xACA9;&#xC99D;
+          h3 Profile
+        img.rounded-circle(src='/image/profile_happy.jpg')
         .card-body.text-center
-          .row
-            .col
-              p.h6.card-text.text-muted.mx-auto TOEIC
-              canvas#toeic-chart
-            .col
-              p.h6.card-text.text-muted.mx-auto TOPCIT
-              canvas#topcit-chart
-            .col
-              p.h6.card-text.text-muted.mx-auto TOEIC SPEAKING
-              canvas#toeicsp-chart
-script.
-  var lang_config = {
-  type: 'pie',
-  data: {
-  datasets: [{
-  data: [
-  10, 20, 30, 10
-  ],
-  backgroundColor: [
-  '#CEF19E',
-  '#A7DDA7',
-  '#78BE97',
-  '#398689'
-  ],
-  label: 'lang-chart'
-  }],
-  labels: [
-  'Java',
-  'Go',
-  'C++',
-  'C'
-  ]
-  },
-  options: {
-  responsive: true
-  }
-  };
-  var toeic_config = {
-  type: 'doughnut',
-  data: {
-  datasets: [{
-  data: [
-  920,
-  80
-  ],
-  backgroundColor: [
-  '#78BE97',
-  '#DEDEDE'
-  ],
-  label: 'Toeic'
-  }],
-  },
-  options: {
-  responsive: true,
-  rotation: 1 * Math.PI,
-  circumference: 1 * Math.PI,
-  tooltips: {
-  callbacks: {
-  label: function(tooltipItem, data) {
-  var label = data.datasets[tooltipItem.datasetIndex].label || '';
-  if (label && tooltipItem.index != 1) {
-  label += ': ';
-  label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
-  } else
-  tooltipItem.enabled = false;
-  return label;
-  }
-  }
-  },
-  elements: {
-  center: {
-  text: '920',
-  color: '#398689',
-  fontStyle: 'Helvetica',
-  sidePadding: 20
-  }
-  }
-  }
-  };
-  var topcit_config = {
-  type: 'doughnut',
-  data: {
-  datasets: [{
-  data: [
-  400,
-  1000-400
-  ],
-  backgroundColor: [
-  '#78BE97',
-  '#DEDEDE'
-  ],
-  label: 'topcit'
-  }],
-  },
-  options: {
-  responsive: true,
-  rotation: 1 * Math.PI,
-  circumference: 1 * Math.PI,
-  tooltips: {
-  callbacks: {
-  label: function(tooltipItem, data) {
-  var label = data.datasets[tooltipItem.datasetIndex].label || '';
-  if (label && tooltipItem.index != 1) {
-  label += ': ';
-  label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
-  } else
-  tooltipItem.enabled = false;
-  return label;
-  }
-  }
-  },
-  elements: {
-  center: {
-  text: '400',
-  color: '#398689',
-  fontStyle: 'bold',
-  sidePadding: 20
-  }
-  }
-  }
-  };
-  var toeicsp_config = {
-  type: 'doughnut',
-  data: {
-  datasets: [{
-  data: [
-  700,
-  300
-  ],
-  backgroundColor: [
-  '#78BE97',
-  '#DEDEDE'
-  ],
-  label: 'Toeic-Speaking'
-  }],
-  },
-  options: {
-  responsive: true,
-  rotation: 1 * Math.PI,
-  circumference: 1 * Math.PI,
-  tooltips: {
-  callbacks: {
-  label: function(tooltipItem, data) {
-  var label = data.datasets[tooltipItem.datasetIndex].label || '';
-  if (label && tooltipItem.index != 1) {
-  label += ': ';
-  label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
-  } else
-  tooltipItem.enabled = false;
-  return label;
-  }
-  }
-  },
-  elements: {
-  center: {
-  text: '700',
-  color: '#398689',
-  fontStyle: 'Helvetica',
-  sidePadding: 20
-  }
-  }
-  }
-  };
-  Chart.pluginService.register({
-  beforeDraw: function (chart) {
-  if (chart.config.options.elements.center) {
-  //Get ctx from string
-  var ctx = chart.chart.ctx;
-  //Get options from the center object in options
-  var centerConfig = chart.config.options.elements.center;
-  var fontStyle = centerConfig.fontStyle || 'Arial';
-  var txt = centerConfig.text;
-  var color = centerConfig.color || '#000';
-  var sidePadding = centerConfig.sidePadding || 20;
-  var sidePaddingCalculated = (sidePadding/100) * (chart.innerRadius * 2)
-  //Start with a base font of 30px
-  ctx.font = "50px " + fontStyle;
-  //Get the width of the string and also the width of the element minus 10 to give it 5px side padding
-  var stringWidth = ctx.measureText(txt).width;
-  var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
-  // Find out how much the font can grow in width.
-  var widthRatio = elementWidth / stringWidth;
-  var newFontSize = Math.floor(30 * widthRatio);
-  var elementHeight = (chart.innerRadius * 2);
-  // Pick a new font size so it will not be larger than the height of label.
-  var fontSizeToUse = Math.min(newFontSize, elementHeight);
-  //Set font settings to draw it correctly.
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
-  var centerY = ((chart.chartArea.top + chart.chartArea.bottom)/2 + 50);
-  ctx.font = fontSizeToUse+"px " + fontStyle;
-  ctx.fillStyle = color;
-  //Draw text in center
-  ctx.fillText(txt, centerX, centerY);
-  }
-  }
-  });
-  window.onload = function() {
-  var lang_path = document.getElementById('lang-chart').getContext('2d');
-  window.myPie = new Chart(lang_path, lang_config);
-  var toeic_path = document.getElementById('toeic-chart').getContext('2d');
-  window.myPie = new Chart(toeic_path, toeic_config);
-  var ctx = document.getElementById('topcit-chart').getContext('2d');
-  window.myPie = new Chart(ctx, topcit_config);
-  var toeicsp_path = document.getElementById('toeicsp-chart').getContext('2d');
-  window.myPie = new Chart(toeicsp_path, toeicsp_config);
-  };
-| @endsection
+          p.h2.card-title.font-weight-bold 해피
+          p.h6.card-text.text-muted 부산대학교
+          p.h6.card-text.text-muted 정보컴퓨터공학과
+          p.h6.card-text.text-muted hyper@pusan.ac.kr
+    .col-md-9.clearfix.mx-auto.pb-4
+      .card.shadow
+        .card-header
+          h3 Project
+        #multi-project.carousel.slide.projects(data-ride='carousel')
+          .controls-mid.pb-2.text-center
+            a.btn-floating.btn-lg(href='#multi-project', data-slide='prev')
+              i.fa.fa-chevron-circle-left
+            a.btn-floating.btn-lg(href='#multi-project', data-slide='next')
+              i.fa.fa-chevron-circle-right
+          .carousel-inner.pr-2
+            .carousel-item.active
+              .row
+                .col-sm
+                  .card.border-success
+                    .card-body.text-center
+                      p.h5.card-title.font-weight-bold Project1
+                      p.h6.card-text.text-secondary.mt-3 Blockchain network;
+                      a.btn.btn-success.mt-3(href='#') Go
+                .col-sm
+                  .card.border-success
+                    .card-body.text-center
+                      p.h5.card-title.font-weight-bold Project2
+                      p.h6.card-text.text-secondary.mt-3 Android Application
+                      a.btn.btn-success.mt-3(href='#') Go
+                .col-sm
+                  .card.border-success
+                    .card-body.text-center
+                      p.h5.card-title.font-weight-bold Project3
+                      p.h6.card-text.text-secondary.mt-3 Web application
+                      a.btn.btn-success.mt-3(href='#') Go
+            .carousel-item
+              .row
+                .col-sm
+                  .card.border-success
+                    .card-body.text-center
+                      p.h5.card-title.font-weight-bold Project4
+                      p.h6.card-text.text-secondary.mt-3 Deep Learning
+                      a.btn.btn-success.mt-3(href='#') Go
+                .col-sm
+                  .card.border-success
+                    .card-body.text-center
+                      p.h5.card-title.font-weight-bold Project5
+                      p.h6.card-text.text-secondary.mt-3 10 commit
+                      a.btn.btn-success.mt-3(href='#') Go
+                .col-sm
+                  .card.border-success
+                    .card-body.text-center
+                      p.h5.card-title.font-weight-bold Project6
+                      p.h6.card-text.text-secondary.mt-3 10 commit
+                      a.btn.btn-success.mt-3(href='#') Go
+    .row
+      .col-md-5.clearfix.mx-auto
+        .card.h-50.shadow
+          .card-header
+            h3 Language Frequency
+          .card-body.text-center
+            canvas#lang-chart
+      .col-md-5.clearfix.mx-auto
+        .card.h-50.shadow
+          .card-header
+            h3 Contribution
+          .card-body.pt-5
+            .row
+              p.h6.card-text.text-muted.mx-auto Average of commits
+              p.h6.card-text.text-muted.mx-auto Total of commits
+            .row
+              p#tot-commit.h1.mx-auto.pl-4.num 582
+              p#avg-commit.h1.mx-auto.pl-3.num 2341
+      .col-md-11.clearfix.mx-auto.mt-4
+        .card.shadow
+          .card-header
+            h3 Certificates
+          .card-body.text-center
+            .row
+              .col
+                p.h6.card-text.text-muted.mx-auto TOEIC
+                canvas#toeic-chart
+              .col
+                p.h6.card-text.text-muted.mx-auto TOPCIT
+                canvas#topcit-chart
+              .col
+                p.h6.card-text.text-muted.mx-auto TOEIC SPEAKING
+                canvas#toeicsp-chart
+  script.
+    var lang_config = {
+    type: 'pie',
+    data: {
+    datasets: [{
+    data: [
+    10, 20, 30, 10
+    ],
+    backgroundColor: [
+    '#CEF19E',
+    '#A7DDA7',
+    '#78BE97',
+    '#398689'
+    ],
+    label: 'lang-chart'
+    }],
+    labels: [
+    'Java',
+    'Go',
+    'C++',
+    'C'
+    ]
+    },
+    options: {
+    responsive: true
+    }
+    };
+    var toeic_config = {
+    type: 'doughnut',
+    data: {
+    datasets: [{
+    data: [
+    920,
+    80
+    ],
+    backgroundColor: [
+    '#78BE97',
+    '#DEDEDE'
+    ],
+    label: 'Toeic'
+    }],
+    },
+    options: {
+    responsive: true,
+    rotation: 1 * Math.PI,
+    circumference: 1 * Math.PI,
+    tooltips: {
+    callbacks: {
+    label: function(tooltipItem, data) {
+    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+    if (label && tooltipItem.index != 1) {
+    label += ': ';
+    label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
+    } else
+    tooltipItem.enabled = false;
+    return label;
+    }
+    }
+    },
+    elements: {
+    center: {
+    text: '920',
+    color: '#398689',
+    fontStyle: 'Helvetica',
+    sidePadding: 20
+    }
+    }
+    }
+    };
+    var topcit_config = {
+    type: 'doughnut',
+    data: {
+    datasets: [{
+    data: [
+    400,
+    1000-400
+    ],
+    backgroundColor: [
+    '#78BE97',
+    '#DEDEDE'
+    ],
+    label: 'topcit'
+    }],
+    },
+    options: {
+    responsive: true,
+    rotation: 1 * Math.PI,
+    circumference: 1 * Math.PI,
+    tooltips: {
+    callbacks: {
+    label: function(tooltipItem, data) {
+    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+    if (label && tooltipItem.index != 1) {
+    label += ': ';
+    label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
+    } else
+    tooltipItem.enabled = false;
+    return label;
+    }
+    }
+    },
+    elements: {
+    center: {
+    text: '400',
+    color: '#398689',
+    fontStyle: 'bold',
+    sidePadding: 20
+    }
+    }
+    }
+    };
+    var toeicsp_config = {
+    type: 'doughnut',
+    data: {
+    datasets: [{
+    data: [
+    700,
+    300
+    ],
+    backgroundColor: [
+    '#78BE97',
+    '#DEDEDE'
+    ],
+    label: 'Toeic-Speaking'
+    }],
+    },
+    options: {
+    responsive: true,
+    rotation: 1 * Math.PI,
+    circumference: 1 * Math.PI,
+    tooltips: {
+    callbacks: {
+    label: function(tooltipItem, data) {
+    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+    if (label && tooltipItem.index != 1) {
+    label += ': ';
+    label += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] || '';
+    } else
+    tooltipItem.enabled = false;
+    return label;
+    }
+    }
+    },
+    elements: {
+    center: {
+    text: '700',
+    color: '#398689',
+    fontStyle: 'Helvetica',
+    sidePadding: 20
+    }
+    }
+    }
+    };
+    Chart.pluginService.register({
+    beforeDraw: function (chart) {
+    if (chart.config.options.elements.center) {
+    //Get ctx from string
+    var ctx = chart.chart.ctx;
+    //Get options from the center object in options
+    var centerConfig = chart.config.options.elements.center;
+    var fontStyle = centerConfig.fontStyle || 'Arial';
+    var txt = centerConfig.text;
+    var color = centerConfig.color || '#000';
+    var sidePadding = centerConfig.sidePadding || 20;
+    var sidePaddingCalculated = (sidePadding/100) * (chart.innerRadius * 2)
+    //Start with a base font of 30px
+    ctx.font = "50px " + fontStyle;
+    //Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+    var stringWidth = ctx.measureText(txt).width;
+    var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+    // Find out how much the font can grow in width.
+    var widthRatio = elementWidth / stringWidth;
+    var newFontSize = Math.floor(30 * widthRatio);
+    var elementHeight = (chart.innerRadius * 2);
+    // Pick a new font size so it will not be larger than the height of label.
+    var fontSizeToUse = Math.min(newFontSize, elementHeight);
+    //Set font settings to draw it correctly.
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+    var centerY = ((chart.chartArea.top + chart.chartArea.bottom)/2 + 50);
+    ctx.font = fontSizeToUse+"px " + fontStyle;
+    ctx.fillStyle = color;
+    //Draw text in center
+    ctx.fillText(txt, centerX, centerY);
+    }
+    }
+    });
+    window.onload = function() {
+    var lang_path = document.getElementById('lang-chart').getContext('2d');
+    window.myPie = new Chart(lang_path, lang_config);
+    var toeic_path = document.getElementById('toeic-chart').getContext('2d');
+    window.myPie = new Chart(toeic_path, toeic_config);
+    var ctx = document.getElementById('topcit-chart').getContext('2d');
+    window.myPie = new Chart(ctx, topcit_config);
+    var toeicsp_path = document.getElementById('toeicsp-chart').getContext('2d');
+    window.myPie = new Chart(toeicsp_path, toeicsp_config);
+    };
+  
