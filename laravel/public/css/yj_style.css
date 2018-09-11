@@ -1,7 +1,4 @@
-@import "https://fonts.googleapis.com/css?family=Muli";
-*{
-  font-family: "Muli",sans-serif;
-}
+
 .card.shadow {
 	box-shadow: 0px 0px 8px #DFDFDF;
 	border: none;
@@ -22,4 +19,17 @@
 
 .projects {
 	padding: 20px 10px 10px 20px;
+}
+
+.fa-chevron-circle-left,
+.fa-chevron-circle-right {
+	color: green;
+}
+
+.num {
+	color: #398689;
+}
+
+thead, th {
+	background-color: #a7dda7;
 }
