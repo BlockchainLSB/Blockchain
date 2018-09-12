@@ -1,0 +1,54 @@
+extends ../../layouts/project
+
+block project
+  .card
+  .card-header Commit
+  .card-body
+    .row(style='margin-left : 0px; margin-right : 0px;')
+      form.form-inline
+        div
+          select.form-group.form-control
+            option branch : all
+            option branch : master
+            option branch : develop
+        button.select-category.btn.btn-outline-secondary.ml-2(type='submit')
+          | Search 
+          i.fa.fa-search
+  .card.mb-4.mr-2.ml-2
+    .card-body(style='width:100%;')
+      table.table.table-hover
+        thead(style='background:#343A40;color:#FFFFFF')
+          tr
+            th(scope='col') No.
+            th(scope='col') Branch
+            th(scope='col') User
+            th(scope='col') Message
+            th(scope='col') Time
+        tbody
+          div
+          each val in [1,2,3,4,5,6,7,8,9,10]
+            tr
+              td
+                a(href='#') commit#
+              td branch
+              td user name
+              td commit message
+              td 0000                  
+    .card-body
+      nav
+        ul.pagination
+          li.page-item
+            a.page-link(href='#')
+              span(aria-hidden='true') &laquo;
+              span.sr-only Previous
+          li.page-item.active
+            a.page-link(href='#') 1
+          li.page-item
+            a.page-link(href='#') 2
+          li.page-item
+            a.page-link(href='#') 3
+          li.page-item
+            a.page-link(href='#')
+              span(aria-hidden='true') &raquo;
+              span.sr-only Next
+  

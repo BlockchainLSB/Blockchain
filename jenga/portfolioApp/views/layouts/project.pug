@@ -1,0 +1,27 @@
+extends ../layouts/master
+
+block content
+  .container
+    .card.mb-4(style='background:#343A40')
+      .card-body
+        h5.d-inline(style='color:#FFFFFF')  Project Name
+    .row
+      .col-md-2
+        ul.list-group
+          li.list-group-item.dropdown
+            a.dropdown-toggle(data-toggle='dropdown', href='#', style='color:#000000')
+              | Repository 
+              span.caret
+            ul.dropdown-menu
+              li.list-group-item
+                a(href='/project/repository/description', style='color:#000000') Description
+              li.list-group-item
+                a(href='/project/repository/commit', style='color:#000000') Commit
+              li.list-group-item
+                a(href='/project/repository/contributor', style='color:#000000') Contributor
+          li.list-group-item
+            a(href='/project/static', style='color:#000000') Static
+          li.list-group-item
+            a(href='/project/evaluation', style='color:#000000') Evaluation
+      .col-md-10
+        block project
