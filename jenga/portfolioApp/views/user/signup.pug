@@ -1,0 +1,72 @@
+extends ../layouts/master
+
+block content
+  .container.pl-7.pr-7
+    .col-md-12
+      .card
+        .card-header
+          | Register User
+        .card-body
+          form(action='/user/signup', method='post')
+            .form-group
+              .row
+                .col-md-2
+                  .card
+                    .card-body
+                      img(src='/image/profile_img.png', style='width: 100px; height: auto')
+              .row.mt-3
+                .col-md-5
+                  .input-group.mb-3
+                    .input-group-prepend
+                      span.input-group-text Profile
+                    .custom-file
+                      input#user_img.custom-file-input(type='file', name='user_img')
+                      label.custom-file-label(for='user_img') Upload Profile Image(.jpg)
+            .form-group
+              .row
+                .col-md-5
+                  label(for='user_name') Name
+                  input#user_name.form-control(type='text', placeholder='Name', name='user_name')
+                .col-md-5
+                  label(for='user_id') ID
+                  input#user_id.form-control(type='text', placeholder='ID', name='user_id')
+            .form-group
+              .row
+                .col-md-5
+                  label(for='user_email') Email
+                  input#user_email.form-control(type='email', placeholder='Email', name='user_email')
+            .form-group
+              .row
+                .col-md-5
+                  label(for='user_passwd') Password
+                  input#user_passwd.form-control(type='password', placeholder='Password', name='user_passwd')
+                .col-md-5
+                  label(for='passwd_confirm') Password Confirm
+                  input#password_confirm.form-control(type='password', placeholder='Password Confirm', name='passwd_confirm')
+            .form-group
+              .row
+                .col-md-5
+                  label(for='user_school') School
+                  input#user_school.form-control(type='text', placeholder='School', name='user_school')
+                .col-md-5
+                  label(for='user_major') Major
+                  input#user_major.form-control(type='text', placeholder='Major', name='user_major')
+            .form-group
+              .row
+                .col-md-10
+                  .card
+                    .card-header Git 연동하기 및  자격증 성적 입력
+                    .card-body
+                      button.btn.btn-secondary.mb-4 Git 연동하기
+                      .row
+                        .col-md-4
+                          label(for='user_toeic') Toeic
+                          input#user_toeic.form-control(type='text', placeholder='Toeic', name='user_toeic')
+                        .col-md-4
+                          label(for='user_speaking') Toeic Speaking
+                          input#user_speaking.form-control(type='text', placeholder='Toeic Speaking', name='user_speaking')
+                        .col-md-4
+                          label(for='user_topcit') Topcit
+                          input#user_topcit.form-control(type='text', placeholder='Topcit', name='user_topcit')
+            button.btn.btn-primary(type='submit') SignUp
+  
