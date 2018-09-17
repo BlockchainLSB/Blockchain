@@ -21,11 +21,29 @@ type ProjectChaincode struct {
 	args []string
 }
 
+type Project struct {
+	pId string 'json:"id"'
+	pName string 'json:"name"'
+	pDes string 'json:"des"'
+	pOkContributors []string 'json:"okcontributor"'
+}
+
+// Project struct Constructor
+func newProject (pId string, pName string, pDes string, pOkContributor string) *Project {
+	p := Project{}
+	p.pId = pId
+	p.pName = pName
+	p.pDes = pDes
+	p.pOkContributors = []string{pOkContributor}
+	return &p
+}
+
 func (t *ProjectChaincode) call() pb.Response {
 	function := t.function
 
 	callMap := map[string]func() pb.Response{
-		"create":	t.create,
+		"getProjectDetail":	t.getProjectDetail, // query
+		"addTestProject": t.addTestProject, // for test
 	}
 
 	h := callMap[function]
@@ -63,7 +81,25 @@ func (t *ProjectChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 	return t.call()
 }
 
-func (t *ProjectChaincode) create() pb.Response {
+func (t *ProjectChaincode) getProjectDetail() pb.Response {
+	fmt.Println("getProjectDetail")
+
+	return shim.Success(nil)
+}
+
+// pid, pname, pdes, pok
+func (t *ProjectChaincode) addTestProject() pb.Response {
+	fmt.Println("addTestProject")
+	fmt.Println("args[0]: " + t.args[0]) // pid
+	fmt.Println("args[1]: " + t.args[1]) // pname
+	fmt.Println("args[2]: " + t.args[2]) // pDes
+	fmt.Println("args[3]: " + t.args[3]) // pok
+
+	p := newProject(t.args[0], t.args[1], t.args[2], t.args[3])
+	fmt.Println("OK for mapping p structure and value")
+
+	doc, _ := json.Marshal(p)
+	fmt.Println("Transform JSON " + doc)
 
 	return shim.Success(nil)
 }

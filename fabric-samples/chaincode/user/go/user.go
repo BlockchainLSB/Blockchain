@@ -32,27 +32,25 @@ import (
 	pb "github.com/hyperledger/fabric/protos/peer"
 )
 
-type User struct {
-	Id     string `json:"id"`
-	Passwd string `json:"passwd"`
-	Email  string `json:"email"`
-}
-
 type keyType string
 
 const (
-	passwordType    keyType = "pw_"
-	tokenType       keyType = "tk_"
-	temporalType    keyType = "tmp_"
-	projectType     keyType = "prj_"
-	starProjectType keyType = "sprj_"
+	passwordType keyType = "pw_"
+	tokenType    keyType = "tk_"
+	temporalType keyType = "tmp_"
 )
 
 // UserChaincode example simple Chaincode implementation
 type UserChaincode struct {
 	stub     shim.ChaincodeStubInterface
 	function string
-	args      []string
+	args     []string
+}
+
+type User struct {
+	Id     string `json:"id"`
+	Passwd string `json:"passwd"`
+	Email  string `json:"email"`
 }
 
 func (t *UserChaincode) call() pb.Response {
@@ -61,6 +59,7 @@ func (t *UserChaincode) call() pb.Response {
 	callMap := map[string]func() pb.Response{
 		"signup": t.signup,
 		"signin": t.signin,
+		"token":  t.token,
 	}
 
 	h := callMap[function]
@@ -89,18 +88,23 @@ func (t *UserChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 
 func (t *UserChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
-	fmt.Println("################## Invoke ##################")
+	fmt.Println("========================= Invoke =========================")
+
 	function, args := stub.GetFunctionAndParameters()
-	
+
 	t.function = function
 	t.args = args
 	t.stub = stub
-	
+
 	return t.call()
 }
+
 func (t *UserChaincode) signup() pb.Response {
-	fmt.Println("################## signup ##################")
+
+	fmt.Println("========================= signup =========================")
+
 	args := t.args
+
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
@@ -123,7 +127,9 @@ func (t *UserChaincode) signup() pb.Response {
 }
 
 func (t *UserChaincode) signin() pb.Response {
-	fmt.Println("################## signin ##################")
+
+	fmt.Println("========================= signin =========================")
+
 	args := t.args
 
 	if len(args) != 2 {
@@ -140,7 +146,7 @@ func (t *UserChaincode) signin() pb.Response {
 
 	if pw == string(pwb) {
 		rand.Seed(time.Now().UnixNano())
-		var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz")
+		var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
 
 		b := make([]rune, 10)
 		for i := range b {
@@ -161,7 +167,7 @@ func (t *UserChaincode) signin() pb.Response {
 			return shim.Error(err.Error())
 		}
 
-		err = t.stub.PutState(string(temporalType) + string(token), []byte(id))
+		err = t.stub.PutState(string(temporalType)+string([]byte(token)), []byte(string(id)))
 
 		if err != nil {
 			return shim.Error(err.Error())
@@ -170,16 +176,43 @@ func (t *UserChaincode) signin() pb.Response {
 		return shim.Success([]byte("{ \"is_auth\": true, \"token\": \"" + token + "\"}"))
 	}
 
+	return shim.Error("{ \"is_auth\": false }")
+}
+
+func (t *UserChaincode) token() pb.Response {
+
+	fmt.Println("========================= token =========================")
+
+	args := t.args
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	id := args[0]
+	pw := args[1]
+
+	pwd, err := t.stub.GetState(string(passwordType) + id)
+
+	if err != nil {
+		return shim.Error(id + "is not registered.")
+	}
+
+	if pw == string(pwd) {
+		token, err := t.stub.GetState(string(tokenType) + id)
+
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		return shim.Success(token)
+	}
 	return shim.Error("Incorrect password.")
 }
 
-
-
 /*
 // query callback representing the query of a chaincode
-func (t *UserChaincode) query() pb.Response {
-	fmt.Println("################## query ##################")
-	args := t.args
+func (t *UserChaincode) query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var A string // Entities
 	var err error
 
@@ -192,7 +225,7 @@ func (t *UserChaincode) query() pb.Response {
 	A = args[0]
 
 	// Get the state from the ledger
-	Avalbytes, err := t.stub.GetState(A)
+	Avalbytes, err := stub.GetState(A)
 	if err != nil {
 		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
 		return shim.Error(jsonResp)
@@ -208,6 +241,7 @@ func (t *UserChaincode) query() pb.Response {
 	return shim.Success(Avalbytes)
 }
 */
+
 func main() {
 	err := shim.Start(new(UserChaincode))
 	if err != nil {
