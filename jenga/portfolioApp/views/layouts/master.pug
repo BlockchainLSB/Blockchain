@@ -26,21 +26,21 @@ header
             button.btn.btn-secondary(href='/#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
               | Login
             .dropdown-menu.p-3(style='width:200px')
-              form
+              form(action='/user/signin', method='post')
                 .form-group
                   .input-group.mb-1
                     .input-group-prepend
                       span.input-group-text ID  
-                    input.form-control(type='text', placeholder='ID')
+                    input#user_id.form-control(type='text', placeholder='ID', name='user_id')
                   .input-group.mb-1
                     .input-group-prepend
                       span.input-group-text PW
-                    input.form-control(type='password', placeholder='Password')
+                    input#user_passwd.form-control(type='password', placeholder='Password', name='user_passwd')
                   .input-group.mb-1
                     .input-group-prepend.mr-2
-                      a.btn.btn-secondary(href='#') SignIn
+                      button#btn_signin.btn.btn-secondary(type='submit') SignIn
                     .input-group-append
-                      a.btn.btn-secondary(href='/user/signup') SignUp
+                      a#btn_signup.btn.btn-secondary(href='/user/signup') SignUp
           li.nav-item.dropdown
             a.nav-link(data-toggle='dropdown')
               i.fas.fa-search

@@ -4,6 +4,9 @@ var router = express.Router();
 /* GET home page. */
 
 router.get('/', function(req, res, next){
+	sess = req.session;
+	console.log('sess.token : ' + sess.token);
+	console.log('sess.login : ' + sess.login);
 	res.render('project/index', {});
 })
 
