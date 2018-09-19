@@ -23,6 +23,7 @@ package main
 //hard-coding.
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"strings"
@@ -38,6 +39,7 @@ const (
 	passwordType keyType = "pw_"
 	tokenType    keyType = "tk_"
 	temporalType keyType = "tmp_"
+	projectType  keyType = "prj_"
 )
 
 // UserChaincode example simple Chaincode implementation
@@ -47,19 +49,33 @@ type UserChaincode struct {
 	args     []string
 }
 
-type User struct {
-	Id     string `json:"id"`
-	Passwd string `json:"passwd"`
-	Email  string `json:"email"`
+type UserProject struct {
+	Pnum           int
+	Pname          string
+	PDes           string
+	POkContributor []string
+}
+
+var project_id int = 0
+
+func UserProjectInit(pnum int, pname string, pdes string, pokcontributor []string) *UserProject {
+	up := UserProject{}
+	up.Pnum = pnum
+	up.Pname = pname
+	up.PDes = pdes
+	up.POkContributor = pokcontributor
+	return &up
 }
 
 func (t *UserChaincode) call() pb.Response {
 	function := t.function
 
 	callMap := map[string]func() pb.Response{
-		"signup": t.signup,
-		"signin": t.signin,
-		"token":  t.token,
+		"signup":      t.signup,
+		"signin":      t.signin,
+		"getToken":    t.getToken,
+		"addProject":  t.addProject,
+		"loadProject": t.loadProject,
 	}
 
 	h := callMap[function]
@@ -105,12 +121,12 @@ func (t *UserChaincode) signup() pb.Response {
 
 	args := t.args
 
-	if len(args) != 2 {
+	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	id := args[0]
-	pw := args[1]
+	id := args[1]
+	pw := args[3]
 
 	val, err := t.stub.GetState(string(passwordType) + id)
 	if err == nil && val != nil && len(val) > 0 {
@@ -132,12 +148,12 @@ func (t *UserChaincode) signin() pb.Response {
 
 	args := t.args
 
-	if len(args) != 2 {
+	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	id := args[0]
-	pw := args[1]
+	id := args[1]
+	pw := args[3]
 
 	pwb, err := t.stub.GetState(string(passwordType) + id)
 	if err != nil {
@@ -150,7 +166,6 @@ func (t *UserChaincode) signin() pb.Response {
 
 		b := make([]rune, 10)
 		for i := range b {
-
 			b[i] = letterRunes[rand.Intn(len(letterRunes))]
 		}
 
@@ -179,9 +194,133 @@ func (t *UserChaincode) signin() pb.Response {
 	return shim.Error("{ \"is_auth\": false }")
 }
 
-func (t *UserChaincode) token() pb.Response {
+func (t *UserChaincode) getToken() pb.Response {
 
 	fmt.Println("========================= token =========================")
+
+	//var id, pw string       // Entity
+	var idVal, pwVal string // value
+	args := t.args
+
+	if len(args) != 4 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
+	}
+
+	idVal = args[1]
+	pwVal = args[3]
+
+	pwd, err := t.stub.GetState(string(passwordType) + idVal)
+
+	fmt.Println(pwd)
+
+	if err != nil {
+		return shim.Error(idVal + "is not registered.")
+	}
+
+	if pwVal == string(pwd) {
+		token, err := t.stub.GetState(string(tokenType) + idVal)
+
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+
+		return shim.Success([]byte("{\"token\": \"" + string(token) + "\"}"))
+	}
+
+	return shim.Error("Incorrect password.")
+}
+
+func (t *UserChaincode) addProject() pb.Response {
+
+	/*
+
+		{	projects : [
+					{
+						pid:
+						pname:
+						pdes:
+						pok: []
+					},
+					{
+						pid:
+						pname:
+						pdes:
+						pok: []
+					}
+				]
+		}
+
+
+	*/
+
+	fmt.Println("========================= addProject =========================")
+	args := t.args
+	if len(args) != 8 {
+		return shim.Error("Incorrect number of arguments. Expecting 8")
+	}
+
+	var contributorArray []string
+
+	token := args[1]
+	projectname := args[3]
+	description := args[5]
+	contributorlist := args[7]
+
+	contributorArray = strings.Split(contributorlist, ",")
+
+	//token 값으로 id 값 받아오기
+	userid, err := t.stub.GetState(string(temporalType) + token)
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	existProject, perr := t.stub.GetState(string(projectType) + string(userid))
+
+	if perr != nil {
+		return shim.Error(err.Error())
+	}
+
+	fmt.Println("res -> ", string(existProject))
+
+	//res := make([]string, 0)
+	//_ = json.Unmarshal(existProject, &res)
+
+	data := make([]*UserProject, 0)
+	_ = json.Unmarshal(existProject, &data)
+
+	// project 이름이 동일한 지 확인
+	for _, v := range data {
+		//fmt.Println("string(v) : ", string(v))
+		if v.Pname == projectname {
+			return shim.Error(projectname + " was already added.")
+		}
+	}
+	project_id = project_id + 1
+	p := UserProjectInit(project_id, projectname, description, contributorArray)
+
+	data = append(data, p)
+	doc, jerr := json.MarshalIndent(data, "", "    ")
+
+	if jerr != nil {
+		return shim.Error("json Marshal Error")
+	}
+
+	fmt.Println("Transform JSON " + string(doc))
+
+	err = t.stub.PutState(string(projectType)+string(userid), doc)
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(nil)
+
+}
+
+func (t *UserChaincode) loadProject() pb.Response {
+
+	fmt.Println("========================= loadProject =========================")
 
 	args := t.args
 
@@ -189,25 +328,62 @@ func (t *UserChaincode) token() pb.Response {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	id := args[0]
-	pw := args[1]
+	token := args[1]
 
-	pwd, err := t.stub.GetState(string(passwordType) + id)
+	//token으로 id 찾기
+	userid, err := t.stub.GetState(string(temporalType) + string(token))
 
 	if err != nil {
-		return shim.Error(id + "is not registered.")
+		return shim.Error(err.Error())
 	}
 
-	if pw == string(pwd) {
-		token, err := t.stub.GetState(string(tokenType) + id)
+	fmt.Println(string((userid)))
 
-		if err != nil {
-			return shim.Error(err.Error())
+	doc, err := t.stub.GetState(string(projectType) + string(userid))
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	res := make([]*UserProject, 0)
+	_ = json.Unmarshal(doc, &res)
+	fmt.Println(string(doc))
+	
+	var data []string
+
+	for _, v := range res {
+		if len(v.Pname) != 0 {
+			data = append(data,v.Pname)
 		}
-
-		return shim.Success(token)
 	}
-	return shim.Error("Incorrect password.")
+
+	fmt.Println("project list :" , data)
+	/*
+			projects := make([]map[string]interface{}, 0)
+
+			for _, pid := range res {
+				r := t.invokeChaincode("project", "common", "projectInfoWithoutToken", pid)
+				var v map[string]interface{}
+				_ = json.Unmarshal(r.Payload, &v)
+				projects = append(projects, v)
+			}
+
+		b, _ := json.Marshal(projects)
+	*/
+	return shim.Success(nil)
+}
+
+func (t *UserChaincode) invokeChaincode(name, channel, function string, args ...string) pb.Response {
+	q := toChaincodeArgs(append([]string{function}, args...)...)
+
+	return t.stub.InvokeChaincode(name, q, channel)
+}
+
+func toChaincodeArgs(args ...string) [][]byte {
+	bargs := make([][]byte, len(args))
+	for i, arg := range args {
+		bargs[i] = []byte(arg)
+	}
+	return bargs
 }
 
 /*
