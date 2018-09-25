@@ -14,8 +14,4 @@ router.get('/portfolio', function(req, res, next){
 	res.render('portfolio/index', {});
 });
 
-router.get('/blockchain', function(req, res, next){
-	res.render('blockchain/index', {});
-});
-
 module.exports = router;
