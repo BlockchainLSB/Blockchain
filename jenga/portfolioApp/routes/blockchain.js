@@ -56,10 +56,8 @@ router.get('/', function(req, res, next){
 		query_chainInfo(function(data, statusCode) {
 			var cresult_json = data;
 			var ccode = statusCode;
-			var blockH = data.height.low;
-			var currentBHoffset = data.currentBlockHash.offset;  
+			  
 			console.log("status code: " + ccode);
-			console.log("block height: " + blockH)
 			res.render('blockchain/index', {cresult_json, result_json, login});		
 		});
 		
