@@ -1,17 +1,16 @@
 var express = require('express');
 var router = express.Router();
-var peer = 'peer';
-var channel = 'mychannel';
-var chaincode = 'mycc';
-var api_host = 'http://localhost:4001';
 var Client = require('node-rest-client').Client;
 var client = new Client();
 var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
+var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4";
+var api_port = "4000";
+
 var jsonheaders = {
-					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5MTA5MzEsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc4NzQ5MzJ9.4vsYJ7t0xKcEGnLrR4S_-Lbo-m1PzeQCsrBGoWm2VQQ",
+					"Authorization": "Bearer " + api_token,
 					"Content-Type" : "application/json"
 					};
 object.headers = jsonheaders;
@@ -19,7 +18,7 @@ object.headers = jsonheaders;
 
 var invoke_user = function(fcn, args, callback){
 	
-	var api_url = 'http://52.79.245.63:4001/channels/mychannel/chaincodes/mycc';
+	var api_url = 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc'; 
 	var jsonContent = {
 						'peers' : ["peer0.org1.example.com","peer1.org1.example.com"],
 						'fcn': fcn, 
@@ -29,13 +28,16 @@ var invoke_user = function(fcn, args, callback){
 	
 	client.registerMethod("invokeUserMethod", api_url, "POST");
     client.methods.invokeUserMethod(object, function (data, response) {
+    	var buf = new Buffer(data);
+    	result = buf.toString('utf-8');
 		var statusCode = response.statusCode;
+		console.log('tx_id : ' + result);
 		callback(statusCode);
 	});
 }
 
 var query_user = function(fcn, args, callback){
-	var api_url = 'http://52.79.245.63:4001/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
+	var api_url = 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
 
 	
 	client.registerMethod("queryUserMethod", api_url, "GET");
@@ -54,44 +56,51 @@ router.post('/signup', function(req, res, next){
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
 	
-	query_user('searchUser', [id], function(data, statusCode){
+	query_user('searchUser', ['id', id], function(data, statusCode){
 		var result = data;
-		var code = statusCode;
-		var result_json = JSON.parse(result);
-		console.log("result : " + result);
-		console.log("status_code : " + code);
-		if(!result_json.is_exist){
-			res.render('user/signup', {error : '중복된 아이디 입니다.'});
+		var code = statusCode; 
+		//var result_json = JSON.parse(result);
+		if(result.indexOf('Error') != -1){ 
+			invoke_user('signup', ['id', id,'pw', passwd], function(statusCode){
+				var code = statusCode;
+				console.log("search user status_code : " + code);
+				console.log(data);
+				res.redirect('/');
+			});
+		}else{
+			console.log("search user code : " + code);
+			console.log('존재하는 id');
+			res.render('user/signup', {error : '존재하는 id'});
 		}
 	});
-
-	invoke_user('signup', ['id', id,'pw', passwd], function(statusCode){
-		var code = statusCode;
-		
-		
-		console.log("status_code : " + code);
-		
-		res.redirect('/');
-	});
+/*
+	*/
 })
 
 router.post('/signin', function(req, res, next){
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
-	query_user('getToken', ['id' , id, 'pw', passwd], function(data, statusCode){
-		var result = data;
+	invoke_user('signin', ['id', id,'pw', passwd], function(statusCode){
 		var code = statusCode;
-		var result_json = JSON.parse(result);
-		var token = result_json.token;
-		console.log("result : " + result);
-		console.log("status_code : " + code);
-		console.log("token : " + token);
+		console.log("sign in status_code : " + code);
 		
-		var sess = req.session;
-		sess.token= token;
-		sess.login = true;
-		res.redirect('/project?user_id='+id);
+		query_user('getToken', ['id' , id, 'pw', passwd], function(data, statusCode){
+			var result = data;
+			var code = statusCode;
+			
+			var result_json = JSON.parse(result);
+			var token = result_json.token;
+			console.log("result : " + result);
+			console.log("status_code : " + code);
+			console.log("token : " + token);
+			
+			var sess = req.session;
+			sess.token= token;
+			sess.login = true;
+			res.redirect('/project?user_id='+id);
+		});
 	});
+	
 	
 })
 module.exports = router;
