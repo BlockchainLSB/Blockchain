@@ -6,27 +6,27 @@ block content
     .col-md-9.clearfix.mx-auto.pt-4.pb-4.h-300
       .card.shadow
         .card-header
-          h3 #{strTest}!
+          h3 Transaction
         .card-body.text-center
           table.table.table-bordered.table-sm.table-hover
             thead
               tr
-                th No.
-                th name
+                th Transaction ID
+                th Value
                 th time
             tbody
-              -for(var i=0;i<5;i++)
+              -for(var i={pageInfo.iStart};i<{pageInfo.iEnd};i++)
                 tr
-                  td 1
-                  td sign in 1
-                  td 1
+                  td #{transactionInfos[i].TxId}
+                  td #{transactionInfos[i].Value}
+                  td #{transactionInfos[i].Timestamp}
           ul.pagination
             li.page-item
               a.page-link(href='#', aria-label='Previous')
                 span(aria-hidden='true') &laquo;
                 span.sr-only Previous
             li.page-item
-              a.page-link(href='#') 1
+              a.page-link(href='/blockchain?cur=1') 1
             li.page-item
               a.page-link(href='#') 2
             li.page-item
