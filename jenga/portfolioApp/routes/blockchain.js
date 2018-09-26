@@ -3,7 +3,7 @@ var router = express.Router();
 var peer = 'peer';
 var channel = 'mychannel';
 var chaincode = 'mycc';
-var port = '4000'
+var port = '4001'
 var api_host = 'http://52.79.245.63:' + port;
 var Client = require('node-rest-client').Client;
 var client = new Client();
@@ -58,7 +58,8 @@ router.get('/', function(req, res, next){
 			var ccode = statusCode;
 			  
 			console.log("status code: " + ccode);
-			res.render('blockchain/index', {cresult_json, result_json, login});		
+			var strTest = 'str test!'
+			res.render('blockchain/index', {cresult_json, result_json, login, strTest});		
 		});
 		
 		
