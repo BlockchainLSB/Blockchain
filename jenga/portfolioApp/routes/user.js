@@ -6,7 +6,7 @@ var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4";
+var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwMTQzOTQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NzgzOTR9.qRpe7gYKoxV6H2gLJS-bsPd1h5e9YGNigcUAHG9xjdE";
 var api_port = "4000";
 
 var jsonheaders = {
@@ -49,10 +49,14 @@ var query_user = function(fcn, args, callback){
 }
 
 router.get('/signup', function(req, res, next){
-	res.render('user/signup', {});
+	var sess = req.session;
+	var login = sess.login;
+	res.render('user/signup', {login});
 })
 
 router.post('/signup', function(req, res, next){
+	var sess = req.session;
+	var login = sess.login;
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
 	
@@ -70,7 +74,7 @@ router.post('/signup', function(req, res, next){
 		}else{
 			console.log("search user code : " + code);
 			console.log('존재하는 id');
-			res.render('user/signup', {error : '존재하는 id'});
+			res.render('user/signup', {error : '존재하는 id', login});
 		}
 	});
 /*
@@ -97,10 +101,18 @@ router.post('/signin', function(req, res, next){
 			var sess = req.session;
 			sess.token= token;
 			sess.login = true;
+			sess.user_id = id;
 			res.redirect('/project?user_id='+id);
 		});
 	});
 	
 	
+})
+
+router.get('/signout', function(req, res, next){
+	req.session.destroy(function(err){
+	   // cannot access session here
+	});
+	res.redirect('/');
 })
 module.exports = router;

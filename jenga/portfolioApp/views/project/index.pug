@@ -4,13 +4,26 @@ block content
   .container.pl-7.pr-7
     a.btn.btn-secondary.mb-3(href='/project/addproject') Add Project
     .row.justify-content-start.pr-6.pl-6
-      each val in [1, 2, 3, 4, 5, 6] 
-        .col-md-4.mb-4
+      if(projects != null)
+        each val in projects 
+          if(val.POk)
+            .col-md-4.mb-4
+              .card
+                .card-header
+                  a(href='/project/detail?pnum='+val.Pnum)=val.Pname
+                .card-body=val.PDes
+                small.card-footer.text-muted='#'+val.Pnum
+          else
+            .col-md-4.mb-4
+              .card
+                .card-header
+                  a=val.Pname
+                .card-body
+                  h6.card-title 승인하지 않은 프로젝트 입니다.
+                  a.btn.btn-secondary(href='/project/accept?pnum='+val.Pnum) 승인하기
+      else
+        .col-md-12
           .card
-            .card-header
-              a(href='/project/repository/description') Name
             .card-body
-              | Description
-            small.card-footer.text-muted
-              | language
+              h4.card-title No Projects
       

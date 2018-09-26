@@ -4,24 +4,16 @@ block content
   .container
     .card.mb-4(style='background:#343A40')
       .card-body
-        h5.d-inline(style='color:#FFFFFF')  Project Name
+        h5.d-inline(style='color:#FFFFFF')  #{project.Pname}
     .row
       .col-md-2
-        ul.list-group
-          li.list-group-item.dropdown
-            a.dropdown-toggle(data-toggle='dropdown', href='#', style='color:#000000')
-              | Repository 
-              span.caret
-            ul.dropdown-menu
-              li.list-group-item
-                a(href='/project/repository/description', style='color:#000000') Description
-              li.list-group-item
-                a(href='/project/repository/commit', style='color:#000000') Commit
-              li.list-group-item
-                a(href='/project/repository/contributor', style='color:#000000') Contributor
           li.list-group-item
-            a(href='/project/static', style='color:#000000') Static
+            a(href='/project/description', style='color:#000000') Description
           li.list-group-item
-            a(href='/project/evaluation', style='color:#000000') Evaluation
+            a(href='/project/affraise', style='color:#000000') Affraise
+          li.list-group-item
+            a(href='/project/contributes', style='color:#000000') Contributes
+          li.list-group-item
+            a(href='/project/contributors', style='color:#000000') Contributors
       .col-md-10
         block project
