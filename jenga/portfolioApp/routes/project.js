@@ -49,6 +49,7 @@ var query_project = function(fcn, args, callback){
 }
 
 router.get('/', function(req, res, next){
+	console.log('user_id : ' + req.body.user_id);
 	var sess = req.session;
 	console.log('sess.token : ' + sess.token);
 	console.log('sess.login : ' + sess.login);

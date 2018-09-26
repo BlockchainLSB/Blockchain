@@ -6,27 +6,27 @@ block content
     .col-md-9.clearfix.mx-auto.pt-4.pb-4.h-300
       .card.shadow
         .card-header
-          h3 #{strTest}!
+          h3 Transaction
         .card-body.text-center
           table.table.table-bordered.table-sm.table-hover
             thead
               tr
-                th No.
-                th name
+                th no
+                th Transaction ID
                 th time
             tbody
-              -for(var i=0;i<5;i++)
+              -for(var i=pageInfo.iStart;i<pageInfo.iEnd;i++)
                 tr
-                  td 1
-                  td sign in 1
-                  td 1
+                  td #{i+1}
+                  td #{transactionInfos[i].TxId}
+                  td #{transactionInfos[i].Timestamp}
           ul.pagination
             li.page-item
-              a.page-link(href='#', aria-label='Previous')
+              a.page-link(href='/blockchain?cur=1', aria-label='Previous')
                 span(aria-hidden='true') &laquo;
                 span.sr-only Previous
             li.page-item
-              a.page-link(href='#') 1
+              a.page-link(href='/blockchain?cur=1') 1
             li.page-item
               a.page-link(href='#') 2
             li.page-item
@@ -40,30 +40,26 @@ block content
         .card-header
           h3 Blocks
         .card-body.text-center
+          .row
+            p.h6.card-text.text-muted.mx-auto Block heights: #{cresult_json.height.low}
           table.table.table-bordered.table-sm.table-hover
             thead
               tr
-                th No.
-                th name
-                th time
+                th type
+                th offset
+                th limit
+                th littelEndian
+                th noAssert
             tbody
-              -for(var i=0;i<5;i++)
                 tr
-                  td 1
-                  td sign in 1
-                  td 1
-          ul.pagination
-            li.page-item
-              a.page-link(href='#', aria-label='Previous')
-                span(aria-hidden='true') &laquo;
-                span.sr-only Previous
-            li.page-item
-              a.page-link(href='#') 1
-            li.page-item
-              a.page-link(href='#') 2
-            li.page-item
-              a.page-link(href='#') 3
-            li.page-item
-              a.page-link(href='#', aria-label='Next')
-                span(aria-hidden='true') &raquo;
-                span.sr-only Next
+                  td currentBlockHash
+                  td #{cresult_json.currentBlockHash.offset}
+                  td #{cresult_json.currentBlockHash.limit}
+                  td #{cresult_json.currentBlockHash.littleEndian}
+                  td #{cresult_json.currentBlockHash.noAssert}
+                tr
+                  td previousBlockHash
+                  td #{cresult_json.previousBlockHash.offset}
+                  td #{cresult_json.previousBlockHash.limit}
+                  td #{cresult_json.previousBlockHash.littleEndian}
+                  td #{cresult_json.previousBlockHash.noAssert}
