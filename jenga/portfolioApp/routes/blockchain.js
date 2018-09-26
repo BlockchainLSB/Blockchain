@@ -3,7 +3,7 @@ var router = express.Router();
 var peer = 'peer';
 var channel = 'mychannel';
 var chaincode = 'mycc';
-var port = '4001'
+var port = '4000'
 var api_host = 'http://52.79.245.63:' + port;
 var Client = require('node-rest-client').Client;
 var client = new Client();
@@ -12,7 +12,7 @@ var temp;
 var object = {};
 
 var jsonheaders = {
-					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4",
+					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwMDA1MjUsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NjQ1MjV9.91Brg4vwrmPUY3UUAvDlDqnmBu6B3YsBPCGyT91ZiI8",
 					"Content-Type" : "application/json"
 					};
 object.headers = jsonheaders;

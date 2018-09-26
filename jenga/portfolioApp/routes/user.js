@@ -6,8 +6,8 @@ var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4";
-var api_port = "4001";
+var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwMTI5NTAsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NzY5NTB9.Beub919ZD2RzUSG5y6W8kYfoIJ7U90QTrBGIjECo5qA";
+var api_port = "4000";
 
 var jsonheaders = {
 					"Authorization": "Bearer " + api_token,
@@ -101,6 +101,7 @@ router.post('/signin', function(req, res, next){
 			var sess = req.session;
 			sess.token= token;
 			sess.login = true;
+			sess.user_id = id;
 			res.redirect('/project?user_id='+id);
 		});
 	});

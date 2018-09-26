@@ -1,0 +1,16 @@
+extends ../layouts/project
+
+block project
+  .card
+  .card-header Contributor
+  .card-body
+    .row
+      each val in project.POkContributor
+        if(val.C_ok)
+          .col-md-3
+            .card
+              .card-body
+                img.img-contributor(src='/image/profile_happy.jpg')
+              .card-body
+                h6.card-title(style='text-align: center')=val.Cname
+  
