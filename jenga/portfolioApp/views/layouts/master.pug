@@ -17,30 +17,34 @@ head
 header
   nav#mainNav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
     .container
-      a.navbar-brand.js-scroll-trigger(href='#page-top') Blockchain LSB
+      a.navbar-brand.js-scroll-trigger(href='/') Blockchain LSB
       button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
         span.navbar-toggler-icon
       #navbarResponsive.collapse.navbar-collapse
         ul.navbar-nav.ml-auto
-          li.nav-item.dropdown
-            button.btn.btn-secondary(href='/#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
-              | Login
-            .dropdown-menu.p-3(style='width:200px')
-              form(action='/user/signin', method='post')
-                .form-group
-                  .input-group.mb-1
-                    .input-group-prepend
-                      span.input-group-text ID  
-                    input#user_id.form-control(type='text', placeholder='ID', name='user_id')
-                  .input-group.mb-1
-                    .input-group-prepend
-                      span.input-group-text PW
-                    input#user_passwd.form-control(type='password', placeholder='Password', name='user_passwd')
-                  .input-group.mb-1
-                    .input-group-prepend.mr-2
-                      button#btn_signin.btn.btn-secondary(type='submit') SignIn
-                    .input-group-append
-                      a#btn_signup.btn.btn-secondary(href='/user/signup') SignUp
+          if(login)
+            li.nav-item
+              a#btn_signout.btn.btn-secondary(href='/user/signout') SignOut
+          else
+            li.nav-item.dropdown
+              button.btn.btn-secondary(href='/#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
+                | Login
+              .dropdown-menu.p-3(style='width:200px')
+                form(action='/user/signin', method='post')
+                  .form-group
+                    .input-group.mb-1
+                      .input-group-prepend
+                        span.input-group-text ID  
+                      input#user_id.form-control(type='text', placeholder='ID', name='user_id')
+                    .input-group.mb-1
+                      .input-group-prepend
+                        span.input-group-text PW
+                      input#user_passwd.form-control(type='password', placeholder='Password', name='user_passwd')
+                    .input-group.mb-1
+                      .input-group-prepend.mr-2
+                        button#btn_signin.btn.btn-secondary(type='submit') SignIn
+                      .input-group-append
+                        a#btn_signup.btn.btn-secondary(href='/user/signup') SignUp
           li.nav-item.dropdown
             a.nav-link(data-toggle='dropdown')
               i.fas.fa-search
@@ -50,12 +54,13 @@ header
                   .input-group
                     input.form-control(type='text', placeholder='Contributor')
                     .input-group-append
-                      button.btn.btn-secondary(type='submit') Search;
-          li.nav-item
-            a.nav-link.js-scroll-trigger(href='/portfolio') Portfolio
-          li.nav-item
-            a.nav-link.js-scroll-trigger(href='/project') Project
-          li.nav-item
-            a.nav-link.js-scroll-trigger(href='/blockchain') Blockchain
+                      button.btn.btn-secondary(type='submit') Search
+          if(login)
+            li.nav-item
+              a.nav-link.js-scroll-trigger(href='/portfolio') Portfolio
+            li.nav-item
+              a.nav-link.js-scroll-trigger(href='/project') Project
+            li.nav-item
+              a.nav-link.js-scroll-trigger(href='/blockchain') Blockchain
 .content.mb-5
   block content

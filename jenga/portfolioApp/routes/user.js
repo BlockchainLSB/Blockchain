@@ -7,7 +7,7 @@ var temp;
 var object = {};
 
 var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4";
-var api_port = "4000";
+var api_port = "4001";
 
 var jsonheaders = {
 					"Authorization": "Bearer " + api_token,
@@ -49,10 +49,14 @@ var query_user = function(fcn, args, callback){
 }
 
 router.get('/signup', function(req, res, next){
-	res.render('user/signup', {});
+	var sess = req.session;
+	var login = sess.login;
+	res.render('user/signup', {login});
 })
 
 router.post('/signup', function(req, res, next){
+	var sess = req.session;
+	var login = sess.login;
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
 	
@@ -70,7 +74,7 @@ router.post('/signup', function(req, res, next){
 		}else{
 			console.log("search user code : " + code);
 			console.log('존재하는 id');
-			res.render('user/signup', {error : '존재하는 id'});
+			res.render('user/signup', {error : '존재하는 id', login});
 		}
 	});
 /*
@@ -102,5 +106,12 @@ router.post('/signin', function(req, res, next){
 	});
 	
 	
+})
+
+router.get('/signout', function(req, res, next){
+	req.session.destroy(function(err){
+	   // cannot access session here
+	});
+	res.redirect('/');
 })
 module.exports = router;
