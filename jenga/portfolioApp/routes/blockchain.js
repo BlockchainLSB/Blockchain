@@ -36,7 +36,7 @@ var query_chainInfo = function(callback) {
 		var statusCode = response.statusCode;
 		callback(data, statusCode);
 	});
-}
+} 
 
 router.get('/', function(req, res, next){
 	var sess = req.session;
