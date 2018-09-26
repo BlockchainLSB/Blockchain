@@ -5,7 +5,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
 	var sess = req.session;
 	var login = sess.login;
-  res.render('index', { title: 'Express', login });
+	var user_id = sess.user_id
+  res.render('index', { title: 'BlockchainLSB', login, user_id });
 }); 
 
 
