@@ -7,7 +7,7 @@ var temp;
 var object = {};
 
 var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4";
-var api_port = "4000";
+var api_port = "4001";
 
 var jsonheaders = {
 					"Authorization": "Bearer " + api_token,
@@ -53,11 +53,12 @@ router.get('/', function(req, res, next){
 	console.log('sess.token : ' + sess.token);
 	console.log('sess.login : ' + sess.login);
 	var token = sess.token;
+	var login = sess.login;
 	query_project('loadProject', ['token', token], function(data, statusCode){
 		var result = data;
 		var code = statusCode; 
 		//var result_json = JSON.parse(result);
-		res.render('project/index', {});
+		res.render('project/index', {login});
 	});
 	
 })
@@ -79,27 +80,55 @@ router.post('/', function(req, res, next){
 })
 
 router.get('/repository/description', function(req, res, next){
-	res.render('project/repository/description', {});
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	res.render('project/repository/description', {login});
 })
 
 router.get('/repository/commit', function(req, res, next){
-	res.render('project/repository/commit', {});
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	res.render('project/repository/commit', {login});
 })
 
 router.get('/repository/contributor', function(req, res, next){
-	res.render('project/repository/contributor', {});
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	res.render('project/repository/contributor', {login});
 })
 
 router.get('/static', function(req, res, next){
-	res.render('project/static', {});
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	res.render('project/static', {login});
 })
 
 router.get('/addproject', function(req, res, next){
-	res.render('project/addproject', {});
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	res.render('project/addproject', {login});
 })
 
+router.post('/addproject', function(req, res, next){
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	var pname = req.body.project_name;
+	var pdes  = req.body.project_description;
+	res.redirect('/project');
+})
+
+
 router.get('/evaluation', function(req, res, next){
-	res.render('project/evaluation', {});
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	res.render('project/evaluation', {login});
 })
 
 

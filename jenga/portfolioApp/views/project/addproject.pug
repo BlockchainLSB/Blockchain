@@ -7,18 +7,26 @@ block project
         .card-header
           | Add Project
         .card-body
-          form(action='/project')
+          form(action='/project/addproject', method='POST')
             .form-group
               label(for='project_name') Project Name
-              input#project_name.form-control(type='text', placeholder='Project Name')
+              input#project_name.form-control(type='text', placeholder='Project Name', name='project_name')
             .form-group
               label(for='project_description') Project Description
-              input#project_desciption.form-control(type='text', placeholder='Project Description')
+              input#project_desciption.form-control(type='text', placeholder='Project Description', name='project_description')
             .form-group
               label(for='project_contributor') Contributor
               .input-group.mb-3
-                input.form-control(type='text', placeholder='Contributor')
+                input#contributor_input.form-control(type='text', placeholder='Contributor')
                 .input-group-append
                   button.btn.btn-secondary(type='button') search
+            script(type='text/javascript').
+              function contributor_click(){
+                var id = $("#contributor_input").val();
+                $.ajax({
+                  type : 'get'
+                  url : 'http://52.79.245.63:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null)
+                });
+              }
             button.btn.btn-secondary(type='submit') Add Project
   
