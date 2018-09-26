@@ -3,7 +3,8 @@ var router = express.Router();
 var peer = 'peer';
 var channel = 'mychannel';
 var chaincode = 'mycc';
-var api_host = 'http://52.79.245.63:4001';
+var port = '4000'
+var api_host = 'http://52.79.245.63:' + port;
 var Client = require('node-rest-client').Client;
 var client = new Client();
 var temp;
@@ -11,28 +12,10 @@ var temp;
 var object = {};
 
 var jsonheaders = {
-					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5MTA5MzEsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc4NzQ5MzJ9.4vsYJ7t0xKcEGnLrR4S_-Lbo-m1PzeQCsrBGoWm2VQQ",
+					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5NzgwMzQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NDIwMzR9.GEqG7hFWyQTQVVlLUUGnDYmkQknNqSwKpE-AkaUX2_4",
 					"Content-Type" : "application/json"
 					};
 object.headers = jsonheaders;
-
-
-var invoke_portfolio = function(fcn, args, callback){
-	
-	var api_url = api_host + '/channels/mychannel/chaincodes/mycc';
-	var jsonContent = {
-						'peers' : ["peer0.org1.example.com","peer1.org1.example.com"],
-						'fcn': fcn, 
-						'args': args||[]
-						};
-	object.data = jsonContent;
-	
-	client.registerMethod("invokeUserMethod", api_url, "POST");
-    client.methods.invokeUserMethod(object, function (data, response) {
-		var statusCode = response.statusCode;
-		callback(statusCode);
-	});
-}
 
 var query_portfolio = function(fcn, args, callback){
 	var api_url = api_host + '/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
@@ -45,11 +28,20 @@ var query_portfolio = function(fcn, args, callback){
 	});
 }
 
-
+var query_chainInfo = function(callback) {
+	var api_url = api_host + '/channels/mychannel?peer=peer0.org1.example.com';
+	client.registerMethod("queryChainMethod", api_url, "GET");
+	client.methods.queryChainMethod(object, function (data, response) {
+    	console.log("data : " + JSON.stringify(data));
+		var statusCode = response.statusCode;
+		callback(data, statusCode);
+	});
+}
 
 router.get('/', function(req, res, next){
 	var sess = req.session;
 	var token = sess.token;
+	var login = sess.login;
 	console.log('user token : ' + token);
 	
 	query_portfolio('getUserTransaction', ['token', token], function(data, statusCode){
@@ -59,8 +51,19 @@ router.get('/', function(req, res, next){
 		//var trInfo = result_json.TransactionInfo;
 		//var cn = trInfo.length;
 		console.log("result: " + result);
-		console.log("status code: " + code);
-		res.render('blockchain/index', {result_json});
+		console.log("status code: " 	+ code);
+		
+		query_chainInfo(function(data, statusCode) {
+			var cresult_json = data;
+			var ccode = statusCode;
+			var blockH = data.height.low;
+			var currentBHoffset = data.currentBlockHash.offset;  
+			console.log("status code: " + ccode);
+			console.log("block height: " + blockH)
+			res.render('blockchain/index', {cresult_json, result_json, login});		
+		});
+		
+		
 	});
 })
 
