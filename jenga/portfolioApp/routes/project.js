@@ -93,7 +93,29 @@ router.get('/affraise', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var project = sess.project;
-	res.render('project/affraise', {login, project});
+
+	query_project('requestConlist', ['token', token, 'pnum', pnum], function(data, statusCode){
+		var result = data;
+		var code = statusCode; 
+		var request_list = JSON.parse(result);
+		console.log('status code : ' + code);
+		res.render('project/affraise', {login, request_list});
+	});
+	
+})
+
+router.post('/affraise', function(req, res, next){
+	var sess = req.session;
+	var login = sess.login;
+	var token = sess.token;
+	var project = sess.project;
+
+	invoke_project('addContribution', ['token', token, 'pnum', pnum, 'pdes', pdes], function(statusCode){
+		var code = statusCode;
+
+		console.log("status_code : " + code);
+		res.redirect('/project/appraise?pnum='+pnum);
+	})
 })
 
 
@@ -102,7 +124,14 @@ router.get('/contributes', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var project = sess.project;
-	res.render('project/contributes', {login, project});
+
+	query_project('allacceptedConlist', ['pnum', pnum], function(data, statusCode){
+		var result = data;
+		var code = statusCode; 
+		var accepted_list = JSON.parse(result);
+		console.log('status code : ' + code);
+		res.render('project/contributes', {login, accepted_list});
+	});
 })
 
 router.get('/contributors', function(req, res, next){
@@ -110,6 +139,13 @@ router.get('/contributors', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var project = sess.project;
+	query_project('requestConlist', ['token', token, 'pnum', pnum], function(data, statusCode){
+		var result = data;
+		var code = statusCode; 
+		var request_list = JSON.parse(result);
+		console.log('status code : ' + code);
+		res.render('project/affraise?pnum=' + pnum, {login, request_list});
+	});
 	res.render('project/contributors', {login, project});
 })
 
@@ -156,6 +192,19 @@ router.get('/accept', function(req, res, next){
 	});
 })
 
+router.get('/accept_contribution', function(req, res, next){
+	var sess = req.session;
+	var token = sess.token;
+	var pnum = req.query.pnum;
+	console.log('accept token : ' + token);
+	console.log('accept pnum : '+ pnum);
+	
+	invoke_project('acceptContribution', ['token', token, 'pnum',pnum, 'pindex', pindex], function(statusCode){
+		var code = statusCode;
+		console.log("status_code : " + code);
+		res.redirect('/project/appraise?pnum='+pnum);
+	});
+})
 
 
 module.exports = router;
