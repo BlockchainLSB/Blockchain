@@ -1,24 +1,27 @@
 var express = require('express');
 var router = express.Router();
 var peer = 'peer';
-var channel = 'myc';
-var chaincode = 'lye';
-var api_host = '172.21.0.3:7053';
+var channel = 'mychannel';
+var chaincode = 'mycc';
+var api_host = 'http://localhost:4001';
 var Client = require('node-rest-client').Client;
 var client = new Client();
 var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var jsonheaders = {"Content-Type" : "application/json"};
+var jsonheaders = {
+					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc5MTA5MzEsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc4NzQ5MzJ9.4vsYJ7t0xKcEGnLrR4S_-Lbo-m1PzeQCsrBGoWm2VQQ",
+					"Content-Type" : "application/json"
+					};
 object.headers = jsonheaders;
 
 
 var invoke_user = function(fcn, args, callback){
 	
-	var api_url = api_host + '/channels/' + channel + '/chaincodes/'+chaincode;
+	var api_url = 'http://52.79.245.63:4001/channels/mychannel/chaincodes/mycc';
 	var jsonContent = {
-						'peers' : peer,
+						'peers' : ["peer0.org1.example.com","peer1.org1.example.com"],
 						'fcn': fcn, 
 						'args': args||[]
 						};
@@ -26,30 +29,23 @@ var invoke_user = function(fcn, args, callback){
 	
 	client.registerMethod("invokeUserMethod", api_url, "POST");
     client.methods.invokeUserMethod(object, function (data, response) {
-		buf = new Buffer(JSON.stringify(data));
-
-		var result =  buf.toString();
 		var statusCode = response.statusCode;
-		callback(result, statusCode);
+		callback(statusCode);
 	});
 }
 
-var query_user = function(fcn, args){
-	var api_url = "https://eyecan.tk/rest_api/test_api";
-	var jsonContent = {
-						'device_id' : '1234',
-						};
-	object.data = jsonContent;
+var query_user = function(fcn, args, callback){
+	var api_url = 'http://52.79.245.63:4001/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
 
+	
 	client.registerMethod("queryUserMethod", api_url, "GET");
-	client.methods.queryUserMethod(object, function (data, response) {
-		buf = new Buffer(JSON.stringify(data));
-
-		var result =  buf.toString();
+    client.methods.queryUserMethod(object, function (data, response) {
+    	console.log("data : " + data );
 		var statusCode = response.statusCode;
-		callback(result, statusCode);
+		callback(data, statusCode);
 	});
 }
+
 router.get('/signup', function(req, res, next){
 	res.render('user/signup', {});
 })
@@ -57,8 +53,8 @@ router.get('/signup', function(req, res, next){
 router.post('/signup', function(req, res, next){
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
-	/*
-	invoke_user('searchUser', [id], function(data, statusCode){
+	
+	query_user('searchUser', [id], function(data, statusCode){
 		var result = data;
 		var code = statusCode;
 		var result_json = JSON.parse(result);
@@ -67,13 +63,12 @@ router.post('/signup', function(req, res, next){
 		if(!result_json.is_exist){
 			res.render('user/signup', {error : '중복된 아이디 입니다.'});
 		}
-	});*/
+	});
 
-	invoke_user('signup', ['id', id,'passwd', passwd], function(data, statusCode){
-		var result = data;
+	invoke_user('signup', ['id', id,'pw', passwd], function(statusCode){
 		var code = statusCode;
-		var result_json = JSON.parse(result);
-		console.log("result : " + result);
+		
+		
 		console.log("status_code : " + code);
 		
 		res.redirect('/');
@@ -83,15 +78,15 @@ router.post('/signup', function(req, res, next){
 router.post('/signin', function(req, res, next){
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
-	invoke_user('signin', [id, passwd], function(data, statusCode){
+	query_user('getToken', ['id' , id, 'pw', passwd], function(data, statusCode){
 		var result = data;
 		var code = statusCode;
 		var result_json = JSON.parse(result);
 		var token = result_json.token;
-
 		console.log("result : " + result);
 		console.log("status_code : " + code);
 		console.log("token : " + token);
+		
 		var sess = req.session;
 		sess.token= token;
 		sess.login = true;

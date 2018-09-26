@@ -3,7 +3,7 @@ var router = express.Router();
 var peer = 'peer';
 var channel = 'mychannel';
 var chaincode = 'mycc';
-var api_host = 'http://localhost:4000';
+var api_host = 'http://52.79.245.63:4001';
 var Client = require('node-rest-client').Client;
 var client = new Client();
 var temp;
@@ -17,9 +17,9 @@ var jsonheaders = {
 object.headers = jsonheaders;
 
 
-var invoke_user = function(fcn, args, callback){
+var invoke_portfolio = function(fcn, args, callback){
 	
-	var api_url = 'http://52.79.245.63:4001/channels/mychannel/chaincodes/mycc';
+	var api_url = api_host + '/channels/mychannel/chaincodes/mycc';
 	var jsonContent = {
 						'peers' : ["peer0.org1.example.com","peer1.org1.example.com"],
 						'fcn': fcn, 
@@ -34,10 +34,9 @@ var invoke_user = function(fcn, args, callback){
 	});
 }
 
-var query_user = function(fcn, args, callback){
-	var api_url = 'http://52.79.245.63:4001/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
+var query_portfolio = function(fcn, args, callback){
+	var api_url = api_host + '/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
 
-	
 	client.registerMethod("queryUserMethod", api_url, "GET");
     client.methods.queryUserMethod(object, function (data, response) {
     	console.log("data : " + data );
@@ -52,7 +51,17 @@ router.get('/', function(req, res, next){
 	var sess = req.session;
 	var token = sess.token;
 	console.log('user token : ' + token);
-	res.render('blockchain/index', {});
+	
+	query_portfolio('getUserTransaction', ['token', token], function(data, statusCode){
+		var result = data;
+		var code = statusCode;
+		var result_json = JSON.parse(result);
+		//var trInfo = result_json.TransactionInfo;
+		//var cn = trInfo.length;
+		console.log("result: " + result);
+		console.log("status code: " + code);
+		res.render('blockchain/index', {result_json});
+	});
 })
 
 module.exports = router;
