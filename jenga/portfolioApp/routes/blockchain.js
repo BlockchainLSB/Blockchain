@@ -12,7 +12,7 @@ var temp;
 var object = {};
 
 var jsonheaders = {
-					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwMTQzOTQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NzgzOTR9.qRpe7gYKoxV6H2gLJS-bsPd1h5e9YGNigcUAHG9xjdE",
+					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwNzEwODIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgwMzUwODJ9.wTjV_5A75jnPQ75cl02_cs1IWDq6PbPAtY0eJf_J8a0",
 					"Content-Type" : "application/json"
 					};
 object.headers = jsonheaders;
@@ -98,11 +98,13 @@ router.get('/', function(req, res, next){
 				previous = (curSet - 1) * page_list_size 
 			}
 			
-			if(curSet == totalSet) {
+			if(curSet >= totalSet) {
+				console.log("curset >= totalSet")
 				next = totalPage;
 			}
 			else {
-				next = curPage + 1;
+				console.log("before curSet != total set - curPage: " + curPage)
+				next = Number(curPage) + 1;
 			}
 		}
 		
@@ -128,7 +130,8 @@ router.get('/', function(req, res, next){
 			"iStart": iStart,
 			"iEnd": iEnd,
 			"previous": previous,
-			"next": next
+			"next": next,
+			"tot": totalPageCount
 		}
 		console.log("iStart: " + iStart + ",iEnd: " + iEnd);
 		query_chainInfo(function(data, statusCode) {

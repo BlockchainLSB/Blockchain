@@ -3,7 +3,7 @@ extends ../layouts/master
 block content
 
   .container
-    .col-md-9.clearfix.mx-auto.pt-4.pb-4.h-300
+    .col-md-12.clearfix.mx-auto.pt-4.pb-4.h-300
       .card.shadow
         .card-header
           h3 Transaction
@@ -15,27 +15,27 @@ block content
                 th Transaction ID
                 th time
             tbody
+            if(pageInfo.tot>0)
               -for(var i=pageInfo.iStart;i<pageInfo.iEnd;i++)
                 tr
                   td #{i+1}
                   td #{transactionInfos[i].TxId}
                   td #{transactionInfos[i].Timestamp}
+          if(pageInfo.tot==0)
+            p.h6.card-text.text-muted.mx-auto No Transacitons
           ul.pagination
             li.page-item
-              a.page-link(href='/blockchain?cur=1', aria-label='Previous')
+              a.page-link(href='/blockchain?cur='+pageInfo.previous, aria-label='Previous')
                 span(aria-hidden='true') &laquo;
                 span.sr-only Previous
+            -for(var j=pageInfo.startPage;j<=pageInfo.endPage;j++)
+              li.page-item
+                a.page-link(href='/blockchain?cur='+j) #{j}
             li.page-item
-              a.page-link(href='/blockchain?cur=1') 1
-            li.page-item
-              a.page-link(href='#') 2
-            li.page-item
-              a.page-link(href='#') 3
-            li.page-item
-              a.page-link(href='#', aria-label='Next')
+              a.page-link(href='/blockchain?cur='+pageInfo.next, aria-label='Next')
                 span(aria-hidden='true') &raquo;
                 span.sr-only Next
-    .col-md-9.clearfix.mx-auto.pt-4.pb-4.h-300
+    .col-md-12.clearfix.mx-auto.pt-4.pb-4.h-300
       .card.shadow
         .card-header
           h3 Blocks
