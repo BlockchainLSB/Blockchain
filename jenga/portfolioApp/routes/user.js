@@ -6,7 +6,7 @@ var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwMTQzOTQsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1Mzc5NzgzOTR9.qRpe7gYKoxV6H2gLJS-bsPd1h5e9YGNigcUAHG9xjdE";
+var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwNzEwODIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgwMzUwODJ9.wTjV_5A75jnPQ75cl02_cs1IWDq6PbPAtY0eJf_J8a0";
 var api_port = "4000";
 
 var jsonheaders = {

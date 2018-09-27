@@ -11,15 +11,8 @@ block project
             th(scope='col') User
             th(scope='col') Contribute
         tbody
-          tr
-            td #0
-            td lye
-            td Develop Chaincode and DApp
-          tr
-            td #1
-            td sbk
-            td Develop Chaincode DApp
-          tr
-            td #2
-            td byj
-            td Develop Chaincode DApp
+          each val in accepted_list
+            tr
+              td='#'+val.Pindex
+              td=val.Pevalname
+              td=val.PDes
