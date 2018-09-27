@@ -1,0 +1,19 @@
+extends ../layouts/project
+
+block project
+  .card
+    .card-header Contributes
+    .card-body
+      table.table.table-hover
+        thead(style='background:#343A40;color:#FFFFFF')
+          tr
+            th(scope='col') No.
+            th(scope='col') User
+            th(scope='col') Contribute
+        tbody
+          if(accepted_list != [])
+            each val in accepted_list
+              tr
+                td='#'+val.Pindex
+                td=val.Pevalname
+                td=val.PDes

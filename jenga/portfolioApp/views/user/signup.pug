@@ -10,20 +10,6 @@ block content
           form(action='/user/signup', method='post')
             .form-group
               .row
-                .col-md-2
-                  .card
-                    .card-body
-                      img(src='/image/profile_img.png', style='width: 100px; height: auto')
-              .row.mt-3
-                .col-md-5
-                  .input-group.mb-3
-                    .input-group-prepend
-                      span.input-group-text Profile
-                    .custom-file
-                      input#user_img.custom-file-input(type='file', name='user_img')
-                      label.custom-file-label(for='user_img') Upload Profile Image(.jpg)
-            .form-group
-              .row
                 .col-md-5
                   label(for='user_name') Name
                   input#user_name.form-control(type='text', placeholder='Name', name='user_name')
@@ -55,9 +41,8 @@ block content
               .row
                 .col-md-10
                   .card
-                    .card-header Git 연동하기 및  자격증 성적 입력
+                    .card-header 자격증 성적 입력
                     .card-body
-                      button.btn.btn-secondary.mb-4 Git 연동하기
                       .row
                         .col-md-4
                           label(for='user_toeic') Toeic

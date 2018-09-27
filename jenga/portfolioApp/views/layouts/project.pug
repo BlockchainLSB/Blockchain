@@ -8,12 +8,12 @@ block content
     .row
       .col-md-2
           li.list-group-item
-            a(href='/project/description', style='color:#000000') Description
+            a(href='/project/description?pnum='+project.Pnum, style='color:#000000') Description
           li.list-group-item
-            a(href='/project/affraise', style='color:#000000') Affraise
+            a(href='/project/appraise?pnum='+project.Pnum, style='color:#000000') Affraise
           li.list-group-item
-            a(href='/project/contributes', style='color:#000000') Contributes
+            a(href='/project/contributes?pnum='+project.Pnum, style='color:#000000') Contributes
           li.list-group-item
-            a(href='/project/contributors', style='color:#000000') Contributors
+            a(href='/project/contributors?pnum='+project.Pnum, style='color:#000000') Contributors
       .col-md-10
         block project
