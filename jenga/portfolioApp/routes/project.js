@@ -128,14 +128,14 @@ router.get('/contributes', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var project = sess.project;
-	var pnum = proejct.pnum;
+	var pnum = project.pnum;
 
-	query_project('allacceptedConlist', ['pnum', pnum], function(data, statusCode){
+	query_project('allacceptedConlist', ['pnum', ''+pnum], function(data, statusCode){
 		var result = data;
 		var code = statusCode; 
 		var accepted_list = JSON.parse(result);
 		console.log('status code : ' + code);
-		res.render('project/contributes', {login, accepted_list});
+		res.render('project/contributes', {login, accepted_list ,project});
 	});
 })
 
@@ -195,7 +195,7 @@ router.get('/accept_contribution', function(req, res, next){
 	var sess = req.session;
 	var token = sess.token;
 	var project = sess.project;
-	var pnum = proejct.Pnum;
+	var pnum = project.Pnum;
 	var pindex = req.body.pindex;
 	
 	invoke_project('acceptContribution', ['token', token, 'pnum',''+pnum, 'pindex', ''+pindex], function(statusCode){

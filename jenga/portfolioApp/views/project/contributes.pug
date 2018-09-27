@@ -11,8 +11,9 @@ block project
             th(scope='col') User
             th(scope='col') Contribute
         tbody
-          each val in accepted_list
-            tr
-              td='#'+val.Pindex
-              td=val.Pevalname
-              td=val.PDes
+          if(accepted_list != [])
+            each val in accepted_list
+              tr
+                td='#'+val.Pindex
+                td=val.Pevalname
+                td=val.PDes
