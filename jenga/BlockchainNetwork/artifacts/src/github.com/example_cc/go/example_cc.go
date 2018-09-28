@@ -17,11 +17,11 @@ type keyType string
 var project_num int = 0
 
 const (
-	passwordType    keyType = "pw_"
 	tokenType       keyType = "tk_"
 	temporalType    keyType = "tmp_"
 	projectType     keyType = "prj_"
 	projectlistType keyType = "prjl_"
+	portfolioType   keyType = "por_"
 )
 
 // UserChaincode example simple Chaincode implementation
@@ -31,9 +31,14 @@ type UserChaincode struct {
 	args     []string
 }
 
-type User struct {
-	Id string
-	Pw string
+type UserPortfolio struct {
+	Id            string
+	Pw            string
+	Toeic         string
+	Topcit        string
+	Toeicspeaking string
+	School        string
+	Major         string
 }
 
 /*************** list *******************/
@@ -172,15 +177,6 @@ func UserProjectInit(pnum int, pname string, pdes string, pokcontributor []strin
 
 	return up
 }
-func UserInit(id string, pw string) User {
-
-	user := User{}
-	user.Id = id
-	user.Pw = pw
-
-	return user
-}
-
 func (t *UserChaincode) call() pb.Response {
 	function := t.function
 
@@ -190,6 +186,7 @@ func (t *UserChaincode) call() pb.Response {
 		"getToken":           t.getToken,
 		"addProject":         t.addProject,
 		"loadProject":        t.loadProject,
+		"searchProject":      t.searchProject,
 		"loadProjectdetail":  t.loadProjectdetail,
 		"acceptProject":      t.acceptProject,
 		"searchUser":         t.searchUser,
@@ -198,6 +195,7 @@ func (t *UserChaincode) call() pb.Response {
 		"acceptContribution": t.acceptContribution,
 		"requestedConlist":   t.requestedConlist,
 		"allacceptedConlist": t.allacceptedConlist,
+		"searchPortfolio":    t.searchPortfolio,
 	}
 
 	h := callMap[function]
@@ -243,21 +241,37 @@ func (t *UserChaincode) signup() pb.Response {
 
 	args := t.args
 
-	if len(args) != 4 {
+	if len(args) != 14 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	id := args[1]
-	pw := args[3]
+	up := UserPortfolio{}
+	data := UserPortfolio{}
 
-	//u := UserInit(id, pw)
+	existPortfolio, err := t.stub.GetState(string(portfolioType) + string(args[1]))
 
-	val, err := t.stub.GetState(string(passwordType) + id)
-	if err == nil && val != nil && len(val) > 0 {
-		return shim.Error(id + " has been registered.")
+	if err != nil {
+		return shim.Error(string(args[1]) + " has been resistered. ")
 	}
 
-	err = t.stub.PutState(string(passwordType)+id, []byte(pw))
+	_ = json.Unmarshal(existPortfolio, &data)
+
+	if data.Id == args[1] {
+		return shim.Error(string(args[1]) + " has been resistered. ")
+	}
+
+	up.Id = args[1]
+	up.Pw = args[3]
+	up.Toeic = args[5]
+	up.Topcit = args[7]
+	up.Toeicspeaking = args[9]
+	up.School = args[11]
+	up.Major = args[13]
+
+	doc, _ := json.MarshalIndent(up, "", "    ")
+	fmt.Println(string(doc))
+
+	err = t.stub.PutState(string(portfolioType)+string(args[1]), doc)
 
 	if err != nil {
 		return shim.Error(err.Error())
@@ -279,43 +293,46 @@ func (t *UserChaincode) signin() pb.Response {
 	id := args[1]
 	pw := args[3]
 
+	up := UserPortfolio{}
 	// id로 pw 찾을 수 있음
-	pwb, err := t.stub.GetState(string(passwordType) + id)
+	portfolio, err := t.stub.GetState(string(portfolioType) + id)
+	_ = json.Unmarshal(portfolio, &up)
+
 	if err != nil {
 		return shim.Error(id + " is not registered.")
 	}
 
-	if pw == string(pwb) {
-		rand.Seed(time.Now().UnixNano())
-		var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+	if up.Pw != pw {
+		return shim.Error("Incorrect password! ")
 
-		b := make([]rune, 10)
-		for i := range b {
-			b[i] = letterRunes[rand.Intn(len(letterRunes))]
-		}
-
-		token := string(b)
-		oldToken, _ := t.stub.GetState(string(tokenType) + id)
-
-		if oldToken != nil && len(oldToken) > 0 {
-			t.stub.DelState(string(temporalType) + string(oldToken))
-		}
-
-		// 새로운 토큰 값 id 를 key로 해서 저장
-		err = t.stub.PutState(string(tokenType)+id, []byte(token))
-
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		err = t.stub.PutState(string(temporalType)+string([]byte(token)), []byte(string(id)))
-
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-
-		return shim.Success([]byte("{ \"is_auth\": true, \"token\": \"" + token + "\"}"))
 	}
+
+	rand.Seed(time.Now().UnixNano())
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+	b := make([]rune, 10)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	token := string(b)
+	oldToken, _ := t.stub.GetState(string(tokenType) + id)
+
+	if oldToken != nil && len(oldToken) > 0 {
+		t.stub.DelState(string(temporalType) + string(oldToken))
+	}
+
+	// 새로운 토큰 값 id 를 key로 해서 저장
+	err = t.stub.PutState(string(tokenType)+id, []byte(token))
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	err = t.stub.PutState(string(temporalType)+string([]byte(token)), []byte(string(id)))
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success([]byte("{ \"is_auth\": true, \"token\": \"" + token + "\"}"))
 
 	return shim.Error("{ \"is_auth\": false }")
 }
@@ -336,15 +353,15 @@ func (t *UserChaincode) getToken() pb.Response {
 	pwVal = args[3]
 
 	// id로 pw 찾기
-	pwd, err := t.stub.GetState(string(passwordType) + idVal)
-
-	fmt.Println(string(pwd))
+	up := UserPortfolio{}
+	portfolio, err := t.stub.GetState(string(portfolioType) + idVal)
+	_ = json.Unmarshal(portfolio, &up)
 
 	if err != nil {
 		return shim.Error(idVal + "is not registered.")
 	}
 
-	if pwVal == string(pwd) {
+	if up.Pw == pwVal {
 		token, err := t.stub.GetState(string(tokenType) + idVal)
 
 		if err != nil {
@@ -369,16 +386,19 @@ func (t *UserChaincode) searchUser() pb.Response {
 	id := args[1]
 
 	// id로 pw 찾을 수 있음
-	pw, err := t.stub.GetState(string(passwordType) + id)
+	// id로 pw 찾기
+	up := UserPortfolio{}
+	portfolio, err := t.stub.GetState(string(portfolioType) + id)
+	_ = json.Unmarshal(portfolio, &up)
 
 	if err != nil {
 		fmt.Println("id is not registered")
-		return shim.Error(id + " is not registered")
+		return shim.Error(id + "is not registered.")
 	}
 
-	if len(pw) != 0 {
+	if len(up.Pw) != 0 {
 		fmt.Println(id + " is registered")
-	} else if len(pw) == 0 {
+	} else if len(up.Pw) == 0 {
 		return shim.Error(id + " is not registered")
 	}
 	return shim.Success(nil)
@@ -389,53 +409,53 @@ func (t *UserChaincode) addProject() pb.Response {
 
 	/*
 
-						{
-		    "Pnum": 2,
-		    "Pname": "job3",
-		    "PDes": "amazing!",
-		    "POkContributor": [
-		        {
-		            "Cname": "xxx",
-		            "C_ok": true
-		        },
-		        {
-		            "Cname": "zzz",
-		            "C_ok": false
-		        }
-		    ],
-		    "Pappraise": [
-		        {
-		            "Pindex": 0,
-		            "Pevalname": "xxx",
-		            "PDes": "I am good programmer",
-		            "Pteamlist": [
-		                {
-		                    "PAname": "xxx",
-		                    "PAok": true
-		                },
-		                {
-		                    "PAname": "zzz",
-		                    "PAok": false
-		                }
-		            ]
-		        },
-		        {
-		            "Pindex": 1,
-		            "Pevalname": "zzz",
-		            "PDes": "I am good programmer",
-		            "Pteamlist": [
-		                {
-		                    "PAname": "xxx",
-		                    "PAok": false
-		                },
-		                {
-		                    "PAname": "zzz",
-		                    "PAok": true
-		                }
-		            ]
-		        }
-		    ]
-		}
+	               {
+	       "Pnum": 2,
+	       "Pname": "job3",
+	       "PDes": "amazing!",
+	       "POkContributor": [
+	           {
+	               "Cname": "xxx",
+	               "C_ok": true
+	           },
+	           {
+	               "Cname": "zzz",
+	               "C_ok": false
+	           }
+	       ],
+	       "Pappraise": [
+	           {
+	               "Pindex": 0,
+	               "Pevalname": "xxx",
+	               "PDes": "I am good programmer",
+	               "Pteamlist": [
+	                   {
+	                       "PAname": "xxx",
+	                       "PAok": true
+	                   },
+	                   {
+	                       "PAname": "zzz",
+	                       "PAok": false
+	                   }
+	               ]
+	           },
+	           {
+	               "Pindex": 1,
+	               "Pevalname": "zzz",
+	               "PDes": "I am good programmer",
+	               "Pteamlist": [
+	                   {
+	                       "PAname": "xxx",
+	                       "PAok": false
+	                   },
+	                   {
+	                       "PAname": "zzz",
+	                       "PAok": true
+	                   }
+	               ]
+	           }
+	       ]
+	   }
 
 	*/
 
@@ -536,29 +556,29 @@ func (t *UserChaincode) addProject() pb.Response {
 func (t *UserChaincode) loadProject() pb.Response {
 
 	/*
-					user project list  :  {
-		    "Username": "xxx",
-		    "Projects": [
-		        {
-		            "Pnum": 0,
-		            "Pname": "job1",
-		            "PDes": "wow!",
-		            "POk": false
-		        },
-		        {
-		            "Pnum": 1,f
-		            "Pname": "job2",
-		            "PDes": "amazing!",
-		            "POk": false
-		        },
-		        {
-		            "Pnum": 2,
-		            "Pname": "job3",
-		            "PDes": "amazing!",
-		            "POk": true
-		        }
-		    ]
-		}
+	            user project list  :  {
+	       "Username": "xxx",
+	       "Projects": [
+	           {
+	               "Pnum": 0,
+	               "Pname": "job1",
+	               "PDes": "wow!",
+	               "POk": false
+	           },
+	           {
+	               "Pnum": 1,f
+	               "Pname": "job2",
+	               "PDes": "amazing!",
+	               "POk": false
+	           },
+	           {
+	               "Pnum": 2,
+	               "Pname": "job3",
+	               "PDes": "amazing!",
+	               "POk": true
+	           }
+	       ]
+	   }
 	*/
 
 	fmt.Println("========================= loadProject =========================")
@@ -589,6 +609,26 @@ func (t *UserChaincode) loadProject() pb.Response {
 	return shim.Success([]byte(ldoc))
 }
 
+func (t *UserChaincode) searchProject() pb.Response {
+	fmt.Println("========================= searchProject =========================")
+	args := t.args
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	userid := args[1]
+
+	upl := userProjectList{}
+	existProjectList, _ := t.stub.GetState(string(projectlistType) + string(userid))
+	_ = json.Unmarshal(existProjectList, &upl)
+
+	doc, _ := json.MarshalIndent(upl, "", "    ")
+	fmt.Println(string(doc))
+
+	return shim.Success([]byte(doc))
+
+}
 func (t *UserChaincode) loadProjectdetail() pb.Response {
 	fmt.Println("========================= loadProjectdetail =========================")
 	args := t.args
@@ -1033,7 +1073,26 @@ func (t *UserChaincode) allacceptedConlist() pb.Response {
 	return shim.Success([]byte(doc))
 
 }
+func (t *UserChaincode) searchPortfolio() pb.Response {
+	fmt.Println("========================= searchPortfolio =========================")
+	args := t.args
 
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	userid := args[1]
+
+	up := UserPortfolio{}
+	existPortfolio, _ := t.stub.GetState(string(portfolioType) + string(userid))
+	_ = json.Unmarshal(existPortfolio, &up)
+
+	doc, _ := json.MarshalIndent(up, "", "    ")
+	fmt.Println(string(doc))
+
+	return shim.Success([]byte(doc))
+
+}
 func main() {
 	err := shim.Start(new(UserChaincode))
 	if err != nil {
