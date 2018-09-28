@@ -17,12 +17,12 @@ block content
         .card-header
           h3 Project
         if(cn>0)	
-        #multi-project.carousel.slide.projects(data-ride='carousel')
-         .controls-mid.pb-2.text-center
-          a.btn-floating.btn-lg(href='#multi-project', data-slide='prev')
-           i.fa.fa-chevron-circle-left
-          a.btn-floating.btn-lg(href='#multi-project', data-slide='next')
-           i.fa.fa-chevron-circle-right
+         #multi-project.carousel.slide.projects(data-ride='carousel')
+          .controls-mid.pb-2.text-center
+           a.btn-floating.btn-lg(href='#multi-project', data-slide='prev')
+            i.fa.fa-chevron-circle-left
+           a.btn-floating.btn-lg(href='#multi-project', data-slide='next')
+            i.fa.fa-chevron-circle-right
          .carousel-inner.pr-2
           -for(var i=0; i<cn; i++)
             if(i == 0)
@@ -43,9 +43,9 @@ block content
                    p.h5.card-title.font-weight-bold #{projectl[i].Pname}
                    p.h5.card-title.font-weight-bold #{projectl[i].PDes}
                    a.btn.btn-success.mt-3(href='/project/detail?pnum='+projectl[i].Pnum) Go
-    if(cn==0)
-        .card-body.text-center
-         p.h5.card-title.font-weight-bold No Projects
+        else
+         .card-body.text-center
+          p.h5.card-title.font-weight-bold No Projects
   .row
    .col-md-9.clearfix.mx-auto.mt-4
     .card.shadow
