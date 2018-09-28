@@ -7,28 +7,31 @@ block content
         .card-header
           | Register User
         .card-body
-          form(action='/user/signup', method='post')
+          form(action='/user/signup', method='post', onsubmit='confirn_passwd()')
             .form-group
               .row
                 .col-md-5
                   label(for='user_name') Name
-                  input#user_name.form-control(type='text', placeholder='Name', name='user_name')
+                  input#user_name.form-control(type='text', placeholder='Name', name='user_name' ,required)
                 .col-md-5
                   label(for='user_id') ID
-                  input#user_id.form-control(type='text', placeholder='ID', name='user_id')
+                  .input-group.mb-3
+                    input#sign_id.form-control(type='text', placeholder='ID', name="user_id", required) 
+                  .input-group-append
+                    button.btn.btn-secondary(type='button', onclick="click_search_id('"+api_token+"', "+api_port+")") 중복확인
             .form-group
               .row
                 .col-md-5
                   label(for='user_email') Email
-                  input#user_email.form-control(type='email', placeholder='Email', name='user_email')
+                  input#user_email.form-control(type='email', placeholder='Email', name='user_email', required)
             .form-group
               .row
                 .col-md-5
                   label(for='user_passwd') Password
-                  input#user_passwd.form-control(type='password', placeholder='Password', name='user_passwd')
+                  input#sign_passwd.form-control(type='password', placeholder='Password', name='user_passwd', required)
                 .col-md-5
                   label(for='passwd_confirm') Password Confirm
-                  input#password_confirm.form-control(type='password', placeholder='Password Confirm', name='passwd_confirm')
+                  input#password_confirm.form-control(type='password', placeholder='Password Confirm', name='passwd_confirm', required)
             .form-group
               .row
                 .col-md-5
@@ -54,4 +57,41 @@ block content
                           label(for='user_topcit') Topcit
                           input#user_topcit.form-control(type='text', placeholder='Topcit', name='user_topcit')
             button.btn.btn-primary(type='submit') SignUp
+            script(type='text/javascript').
+              function click_search_id(api_token, api_port){
+                var headers = {}; 
+                headers["Authorization"]="Bearer " + api_token; 
+                headers["Content-Type"]="application/json";
+                var id = $("#sign_id").val();
+                $.ajax({
+                  method:"GET",
+                  headers : headers,
+                  async : false,
+                  url : 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
+                  success:function(response){
+                    var response_json = JSON.stringify(response);
+                    if(!id){
+                      alert("아이디를 입력해 주세요.");
+                    }else if(response == ""){
+                      alert("이미 존재하는 아이디 입니다");
+                    }else{
+                      alert("사용 가능합니다.");
+                    }
+                    
+                  },
+                  error:function(request,status,error){
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+                });
+              }
+              function confirm_passwd(){
+                var passwd = $('#sign_passwd');
+                var confirm = $('#passwd_confirm');
+                if(passwd == confirm){
+                  return true;
+                }else{
+                  alert("비밀번호 확인이 다릅니다.")
+                  return false;
+                }
+              }
   
