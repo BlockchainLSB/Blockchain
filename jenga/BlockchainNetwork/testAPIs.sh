@@ -170,7 +170,7 @@ TRX_ID=$(curl -s -X POST \
   -d '{
 	"peers": ["peer0.org1.example.com","peer1.org1.example.com"],
 	"fcn":"signup",
-	"args":["id","aaaa","pw","1234", "email", "aaa@naver.com", "Toeic", "700", "Topcit", "220", "Toeicspeaking", "130"]
+	"args":["id","aaaa","pw","1234", "email", "aaa@naver.com", "name", "김블록",  "Toeic", "700", "Topcit", "220", "Toeicspeaking", "130", "School", "부산대학교", "major", "computer"]
 }')
 echo "Transacton ID is $TRX_ID"
 echo
