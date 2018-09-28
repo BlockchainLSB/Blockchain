@@ -1,0 +1,16 @@
+var express = require('express');
+var router = express.Router();
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+	var sess = req.session;
+	var api_token = '[put JSON Web Token here]';
+	var api_port = 4000;
+	sess.api_token = api_token;
+	sess.api_port = api_port;
+	var login = sess.login;
+	var user_id = sess.user_id
+  	res.render('index', { title: 'BlockchainLSB', login, user_id, api_token, api_port });
+}); 
+
+module.exports = router;

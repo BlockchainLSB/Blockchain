@@ -1,0 +1,35 @@
+
+.card.shadow {
+	box-shadow: 0px 0px 8px #DFDFDF;
+	border: none;
+	border-radius: 0;
+}
+
+.rounded-circle {
+	width: 150px;
+	height: 150px;
+	margin:0 auto;
+	margin-top: 20px;
+	box-shadow: 0 8px 20px -6px black;
+}
+
+.p-bottom {
+	padding-bottom: 35px;
+}
+
+.projects {
+	padding: 20px 10px 10px 20px;
+}
+
+.fa-chevron-circle-left,
+.fa-chevron-circle-right {
+	color: green;
+}
+
+.num {
+	color: #398689;
+}
+
+thead, th {
+	background-color: #a7dda7;
+}

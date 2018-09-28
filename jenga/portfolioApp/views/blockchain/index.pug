@@ -1,0 +1,65 @@
+extends ../layouts/master
+
+block content
+
+  .container
+    .col-md-12.clearfix.mx-auto.pt-4.pb-4.h-300
+      .card.shadow
+        .card-header
+          h3 Transaction
+        .card-body.text-center
+          table.table.table-bordered.table-sm.table-hover
+            thead
+              tr
+                th no
+                th Transaction ID
+                th time
+            tbody
+            if(pageInfo.tot>0)
+              -for(var i=pageInfo.iStart;i<pageInfo.iEnd;i++)
+                tr
+                  td #{i+1}
+                  td #{transactionInfos[i].TxId}
+                  td #{transactionInfos[i].Timestamp}
+          if(pageInfo.tot==0)
+            p.h6.card-text.text-muted.mx-auto No Transacitons
+          ul.pagination
+            li.page-item
+              a.page-link(href='/blockchain?cur='+pageInfo.previous, aria-label='Previous')
+                span(aria-hidden='true') &laquo;
+                span.sr-only Previous
+            -for(var j=pageInfo.startPage;j<=pageInfo.endPage;j++)
+              li.page-item
+                a.page-link(href='/blockchain?cur='+j) #{j}
+            li.page-item
+              a.page-link(href='/blockchain?cur='+pageInfo.next, aria-label='Next')
+                span(aria-hidden='true') &raquo;
+                span.sr-only Next
+    .col-md-12.clearfix.mx-auto.pt-4.pb-4.h-300
+      .card.shadow
+        .card-header
+          h3 Blocks
+        .card-body.text-center
+          .row
+            p.h6.card-text.text-muted.mx-auto Block heights: #{cresult_json.height.low}
+          table.table.table-bordered.table-sm.table-hover
+            thead
+              tr
+                th type
+                th offset
+                th limit
+                th littelEndian
+                th noAssert
+            tbody
+                tr
+                  td currentBlockHash
+                  td #{cresult_json.currentBlockHash.offset}
+                  td #{cresult_json.currentBlockHash.limit}
+                  td #{cresult_json.currentBlockHash.littleEndian}
+                  td #{cresult_json.currentBlockHash.noAssert}
+                tr
+                  td previousBlockHash
+                  td #{cresult_json.previousBlockHash.offset}
+                  td #{cresult_json.previousBlockHash.limit}
+                  td #{cresult_json.previousBlockHash.littleEndian}
+                  td #{cresult_json.previousBlockHash.noAssert}

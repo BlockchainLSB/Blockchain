@@ -1,0 +1,139 @@
+extends ../layouts/project
+
+block project
+  .card
+  .card-header Static
+  .card-body
+    .row.mt-3
+      .col-md-6
+        .card
+          .card-body
+            h6.card-title
+              | User1 기여도
+            .row
+              .col-md-6
+                .card
+                  .card-body
+                    h6.card-title commit 수
+                    p.card-text 12
+              .col-md-6
+                .card
+                  .card-body
+                    h6.card-title 팀원 평가
+                    p.card-text 12
+      .col-md-6
+        .card
+          .card-body
+            h6.card-title
+              | User2 기여도
+            .row
+              .col-md-6
+                .card
+                  .card-body
+                    h6.card-title commit 수
+                    p.card-text 12
+              .col-md-6
+                .card
+                  .card-body
+                    h6.card-title 팀원 평가
+                    p.card-text 12
+    .row.mt-3
+      .col-md-6
+        .card
+          .card-body
+            h6.card-title
+              | User1 Commit 수
+            canvas#chart-user1-commit
+        script.
+          var config_user1_commit = {
+          type: 'line',
+          data: {
+          datasets: [{
+          data: [
+          12, 33, 44, 22, 33, 44, 22
+          ],
+          label: 'Commit'
+          }],
+          labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          ]
+          },
+          options: {
+          responsive: true
+          }
+          };
+      .col-md-6
+        .card
+          .card-body
+            h6.card-title
+              | User2 Commit 수
+            canvas#chart-user2-commit
+        script.
+          var config_user2_commit = {
+          type: 'line',
+          data: {
+          datasets: [{
+          data: [
+          12, 33, 44, 22, 33, 44, 22
+          ],
+          label: 'Commit'
+          }],
+          labels: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          ]
+          },
+          options: {
+          responsive: true
+          }
+          };
+    .card.mt-3
+      .card-body
+        h6.card-title
+          | 전체 Commit 수
+        canvas#chart-all-commit
+    script.
+      var config_all_commit = {
+      type: 'line',
+      data: {
+      datasets: [{
+      data: [
+      12, 33, 44, 22, 33, 44, 22
+      ],
+      label: 'Commit'
+      }],
+      labels: [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      ]
+      },
+      options: {
+      responsive: true
+      }
+      };
+  script.
+    window.onload = function() {
+    var ctx_all_commit = document.getElementById('chart-all-commit').getContext('2d');
+    window.myPie = new Chart(ctx_all_commit, config_all_commit);
+    var ctx_user1_commit = document.getElementById('chart-user1-commit').getContext('2d');
+    window.myPie = new Chart(ctx_user1_commit, config_user1_commit);
+    var ctx_user2_commit = document.getElementById('chart-user2-commit').getContext('2d');
+    window.myPie = new Chart(ctx_user2_commit, config_user2_commit);
+    };
+  

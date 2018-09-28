@@ -1,0 +1,59 @@
+extends ../layouts/master
+
+block content
+  .container.pl-7.pr-7
+    .col-md-12
+      .card
+        .card-header
+          | Add Project
+        .card-body
+          form#project_form(action='/project/addproject', method='POST')
+            .form-group
+              label(for='project_name') Project Name
+              input#project_name.form-control(type='text', placeholder='Project Name', name='project_name')
+            .form-group
+              label(for='project_description') Project Description
+              input#project_desciption.form-control(type='text', placeholder='Project Description', name='project_description')
+            .form-group#contributor_group
+              label(for='project_contributor') Contributor
+              .input-group.mb-3
+                input#contributor_input.form-control(type='text', placeholder='Contributor') 
+                .input-group-append
+                  button.btn.btn-secondary(type='button', onclick="click_search('"+api_token+"', "+api_port+")") search
+            input#contributor_list.form-control(type='text', placeholder='Contributor', value=user_id, name='contributor_list', style='display : none;') 
+            script(type='text/javascript').
+              function click_search(api_token, api_port){
+                var headers = {}; 
+                headers["Authorization"]="Bearer " + api_token; 
+                headers["Content-Type"]="application/json";
+                var id = $("#contributor_input").val();
+                $.ajax({
+                  method:"GET",
+                  headers : headers,
+                  async : false,
+                  url : 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
+                  success:function(response){
+                    var response_json = JSON.stringify(response);
+                    if(response == ""){
+                      var contributor_list = document.getElementById('contributor_list');
+                      var contributor_group = document.getElementById('contributor_group');
+                      var str = contributor_list.value;
+                      str = str + ',' + id;
+                      contributor_list.value = str;
+                      var node = document.createElement('li');
+                      var text = document.createTextNode(id);
+                      node.appendChild(text);
+                      var form = document.getElementById('project_form');
+                      contributor_group.appendChild(node);
+                    }else{
+                      alert('존재하지 않는 사용자 입니다.');
+                    }
+                    
+                  },
+                  error:function(request,status,error){
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+                });
+              }
+            button.btn.btn-secondary(type='submit') Add Project
+  
