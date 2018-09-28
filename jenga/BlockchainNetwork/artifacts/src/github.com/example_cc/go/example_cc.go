@@ -34,6 +34,8 @@ type UserChaincode struct {
 type UserPortfolio struct {
 	Id            string
 	Pw            string
+	Email         string
+	Name          string
 	Toeic         string
 	Topcit        string
 	Toeicspeaking string
@@ -241,7 +243,7 @@ func (t *UserChaincode) signup() pb.Response {
 
 	args := t.args
 
-	if len(args) != 14 {
+	if len(args) != 18 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
@@ -262,11 +264,13 @@ func (t *UserChaincode) signup() pb.Response {
 
 	up.Id = args[1]
 	up.Pw = args[3]
-	up.Toeic = args[5]
-	up.Topcit = args[7]
-	up.Toeicspeaking = args[9]
-	up.School = args[11]
-	up.Major = args[13]
+	up.Email = args[5]
+	up.Name = args[7]
+	up.Toeic = args[9]
+	up.Topcit = args[11]
+	up.Toeicspeaking = args[13]
+	up.School = args[15]
+	up.Major = args[17]
 
 	doc, _ := json.MarshalIndent(up, "", "    ")
 	fmt.Println(string(doc))
