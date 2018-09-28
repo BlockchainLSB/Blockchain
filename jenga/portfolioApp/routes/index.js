@@ -10,12 +10,7 @@ router.get('/', function(req, res, next) {
 	var api_port = sess.api_port;
 	var login = sess.login;
 	var user_id = sess.user_id
-  res.render('index', { title: 'BlockchainLSB', login, user_id, api_token, api_port });
+  	res.render('index', { title: 'BlockchainLSB', login, user_id, api_token, api_port });
 }); 
-
-
-router.get('/portfolio', function(req, res, next){
-	res.render('portfolio/index', {});
-});
 
 module.exports = router;

@@ -8,85 +8,68 @@ block content
           h3 Profile
         img.rounded-circle(src='/image/profile_happy.jpg')
         .card-body.text-center
-          p.h2.card-title.font-weight-bold 김블록
-          p.h6.card-text.text-muted 부산대학교
-          p.h6.card-text.text-muted 정보컴퓨터공학과
-          p.h6.card-text.text-muted hyper@pusan.ac.kr
+          p.h2.card-title.font-weight-bold #{jportfolio.Name}
+          p.h6.card-text.text-muted #{jportfolio.School}
+          p.h6.card-text.text-muted #{jportfolio.Major}
+          p.h6.card-text.text-muted #{jportfolio.Email}
     .col-md-9.clearfix.mx-auto.pb-4
       .card.shadow
         .card-header
           h3 Project
+        if(cn>0)	
         #multi-project.carousel.slide.projects(data-ride='carousel')
-          .controls-mid.pb-2.text-center
-            a.btn-floating.btn-lg(href='#multi-project', data-slide='prev')
-              i.fa.fa-chevron-circle-left
-            a.btn-floating.btn-lg(href='#multi-project', data-slide='next')
-              i.fa.fa-chevron-circle-right
-          .carousel-inner.pr-2
-            .carousel-item.active
-              .row
+         .controls-mid.pb-2.text-center
+          a.btn-floating.btn-lg(href='#multi-project', data-slide='prev')
+           i.fa.fa-chevron-circle-left
+          a.btn-floating.btn-lg(href='#multi-project', data-slide='next')
+           i.fa.fa-chevron-circle-right
+         .carousel-inner.pr-2
+          -for(var i=0; i<cn; i++)
+            if(i == 0)
+              .carousel-item.active               
+               .row
                 .col-sm
-                  .card.border-success
-                    .card-body.text-center
-                      p.h5.card-title.font-weight-bold BlockChain Project
-                      p.h6.card-text.text-secondary.mt-3 Blockchain network
-                      a.btn.btn-success.mt-3(href='#') Go
+                 .card.border-success
+                  .card-body.text-center
+                   p.h5.card-title.font-weight-bold #{projectl[i].Pname}
+                   p.h5.card-title.font-weight-bold #{projectl[i].PDes}
+                   a.btn.btn-success.mt-3(href='/project/detail?pnum='+projectl[i].Pnum) Go
+            else
+              .carousel-item               
+               .row
                 .col-sm
-                  .card.border-success
-                    .card-body.text-center
-                      p.h5.card-title.font-weight-bold 증강현실 길찾기 어플
-                      p.h6.card-text.text-secondary.mt-3 Android Application
-                      a.btn.btn-success.mt-3(href='#') Go
-                .col-sm
-                  .card.border-success
-                    .card-body.text-center
-                      p.h5.card-title.font-weight-bold 포트폴리오 서비스
-                      p.h6.card-text.text-secondary.mt-3 Web application
-                      a.btn.btn-success.mt-3(href='#') Go
-            .carousel-item
-              .row
-                .col-sm
-                  .card.border-success
-                    .card-body.text-center
-                      p.h5.card-title.font-weight-bold 가위바위보 게임
-                      p.h6.card-text.text-secondary.mt-3 Deep Learning
-                      a.btn.btn-success.mt-3(href='#') Go
-                .col-sm
-                  .card.border-success
-                    .card-body.text-center
-                      p.h5.card-title.font-weight-bold eye-can
-                      p.h6.card-text.text-secondary.mt-3 Serverside
-                      a.btn.btn-success.mt-3(href='#') Go
-                .col-sm
-                  .card.border-success
-                    .card-body.text-center
-                      p.h5.card-title.font-weight-bold Pet Service
-                      p.h6.card-text.text-secondary.mt-3 Web application
-                      a.btn.btn-success.mt-3(href='#') Go
-    .row
-      .col-md-11.clearfix.mx-auto.mt-4
-        .card.shadow
-          .card-header
-            h3 Certificates
-          .card-body.text-center
-            .row
-              .col
-                p.h6.card-text.text-muted.mx-auto TOEIC
-                canvas#toeic-chart
-              .col
-                p.h6.card-text.text-muted.mx-auto TOPCIT
-                canvas#topcit-chart
-              .col
-                p.h6.card-text.text-muted.mx-auto TOEIC SPEAKING
-                canvas#toeicsp-chart
+                 .card.border-success
+                  .card-body.text-center
+                   p.h5.card-title.font-weight-bold #{projectl[i].Pname}
+                   p.h5.card-title.font-weight-bold #{projectl[i].PDes}
+                   a.btn.btn-success.mt-3(href='/project/detail?pnum='+projectl[i].Pnum) Go
+    if(cn==0)
+        .card-body.text-center
+         p.h5.card-title.font-weight-bold No Projects
+  .row
+   .col-md-9.clearfix.mx-auto.mt-4
+    .card.shadow
+      .card-header
+        h3 Certificates
+      .card-body.text-center
+        .row.justify-content-center
+          .col-md-auto
+            p.h6.card-text.text-muted.mx-auto TOEIC
+            canvas#toeic-chart
+          .col-md-auto
+            p.h6.card-text.text-muted.mx-auto TOPCIT
+            canvas#topcit-chart
+          .col-md-auto
+            p.h6.card-text.text-muted.mx-auto TOEIC SPEAKING
+            canvas#toeicsp-chart
   script.
     var toeic_config = {
     type: 'doughnut',
     data: {
     datasets: [{
     data: [
-    920,
-    80
+    #{jportfolio.Toeic},
+    1000-#{jportfolio.Toeic}
     ],
     backgroundColor: [
     '#78BE97',
@@ -114,7 +97,7 @@ block content
     },
     elements: {
     center: {
-    text: '920',
+    text: #{jportfolio.Toeic},
     color: '#398689',
     fontStyle: 'Helvetica',
     sidePadding: 20
@@ -127,8 +110,8 @@ block content
     data: {
     datasets: [{
     data: [
-    400,
-    1000-400
+    #{jportfolio.Topcit},
+    1000-#{jportfolio.Topcit}
     ],
     backgroundColor: [
     '#78BE97',
@@ -156,7 +139,7 @@ block content
     },
     elements: {
     center: {
-    text: '400',
+    text: '#{jportfolio.Topcit}',
     color: '#398689',
     fontStyle: 'bold',
     sidePadding: 20
@@ -169,8 +152,8 @@ block content
     data: {
     datasets: [{
     data: [
-    700,
-    300
+    #{jportfolio.Toeicspeaking},
+    200-#{jportfolio.Toeicspeaking}
     ],
     backgroundColor: [
     '#78BE97',
@@ -198,7 +181,7 @@ block content
     },
     elements: {
     center: {
-    text: '700',
+    text: '#{jportfolio.Toeicspeaking}',
     color: '#398689',
     fontStyle: 'Helvetica',
     sidePadding: 20

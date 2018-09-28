@@ -3,21 +3,20 @@ var router = express.Router();
 var peer = 'peer';
 var channel = 'mychannel';
 var chaincode = 'mycc';
-var port = '4000'
-var api_host = 'http://52.79.245.63:' + port;
+
 var Client = require('node-rest-client').Client;
 var client = new Client();
 var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var jsonheaders = {
-					"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwNzEwODIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgwMzUwODJ9.wTjV_5A75jnPQ75cl02_cs1IWDq6PbPAtY0eJf_J8a0",
+var query_portfolio = function(api_token, api_port, fcn, args, callback){
+	var jsonheaders = {
+					"Authorization": "Bearer " + api_token,
 					"Content-Type" : "application/json"
 					};
-object.headers = jsonheaders;
-
-var query_portfolio = function(fcn, args, callback){
+	object.headers = jsonheaders;
+	var api_host = 'http://52.79.245.63:' + api_port;
 	var api_url = api_host + '/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
 
 	client.registerMethod("queryUserMethod", api_url, "GET");
@@ -28,7 +27,13 @@ var query_portfolio = function(fcn, args, callback){
 	});
 }
 
-var query_chainInfo = function(callback) {
+var query_chainInfo = function(api_token, api_port,callback) {
+	var jsonheaders = {
+					"Authorization": "Bearer " + api_token,
+					"Content-Type" : "application/json"
+					};
+	object.headers = jsonheaders;
+	var api_host = 'http://52.79.245.63:' + api_port;
 	var api_url = api_host + '/channels/mychannel?peer=peer0.org1.example.com';
 	client.registerMethod("queryChainMethod", api_url, "GET");
 	client.methods.queryChainMethod(object, function (data, response) {
@@ -43,8 +48,11 @@ router.get('/', function(req, res, next){
 	var token = sess.token;
 	var login = sess.login;
 	console.log('user token : ' + token);
+	var user_id = sess.user_id;
 	
-	query_portfolio('getUserTransaction', ['token', token], function(data, statusCode){
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	query_portfolio(api_token, api_port,'getUserTransaction', ['token', token], function(data, statusCode){
 		var result = data;
 		var code = statusCode;
 		var result_json = JSON.parse(result);
@@ -134,12 +142,12 @@ router.get('/', function(req, res, next){
 			"tot": totalPageCount
 		}
 		console.log("iStart: " + iStart + ",iEnd: " + iEnd);
-		query_chainInfo(function(data, statusCode) {
+		query_chainInfo(api_token, api_port,function(data, statusCode) {
 			var cresult_json = data;
 			var ccode = statusCode;
 			  
 			console.log("status code: " + ccode);
-			res.render('blockchain/index', {cresult_json, transactionInfos, login, pageInfo});		
+			res.render('blockchain/index', {cresult_json, transactionInfos, login, pageInfo, user_id, api_token, api_port});		
 		});
 		
 		
