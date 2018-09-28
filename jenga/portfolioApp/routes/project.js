@@ -2,22 +2,19 @@ var express = require('express');
 var router = express.Router();
 var Client = require('node-rest-client').Client;
 var client = new Client();
-var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwNzEwODIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgwMzUwODJ9.wTjV_5A75jnPQ75cl02_cs1IWDq6PbPAtY0eJf_J8a0";
-var api_port = "4000";
-
-var jsonheaders = {
-					"Authorization": "Bearer " + api_token,
-					"Content-Type" : "application/json"
-					};
-object.headers = jsonheaders;
 
 
-var invoke_project = function(fcn, args, callback){
-	
+
+var invoke_project = function(api_token, api_port, fcn, args, callback){
+	var jsonheaders = {
+		"Authorization": "Bearer " + api_token,
+		"Content-Type" : "application/json"
+		};
+	object.headers = jsonheaders;
+
 	var api_url = 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc';
 	var jsonContent = {
 						'peers' : ["peer0.org1.example.com","peer1.org1.example.com"],
@@ -36,7 +33,13 @@ var invoke_project = function(fcn, args, callback){
 	});
 }
 
-var query_project = function(fcn, args, callback){ 
+var query_project = function(api_token, api_port, fcn, args, callback){ 
+	var jsonheaders = {
+		"Authorization": "Bearer " + api_token,
+		"Content-Type" : "application/json"
+		};
+	object.headers = jsonheaders;
+
 	var api_url = 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
 	
 	
@@ -55,14 +58,18 @@ router.get('/', function(req, res, next){
 	console.log('sess.login : ' + sess.login);
 	var token = sess.token;
 	var login = sess.login;
-	query_project('loadProject', ['token', token], function(data, statusCode){
+	var user_id = sess.user_id;
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	var search_id = req.query.user_id;
+	query_project(api_token, api_port, 'searchProject', ['userid', search_id], function(data, statusCode){
 		var result = data;
 		var code = statusCode; 
 		var result_json = JSON.parse(result);
 		console.log('username : ' + result_json.Username);
 		console.log('status code : ' + code);
 		var projects = result_json.Projects;
-		res.render('project/index', {login, projects});
+		res.render('project/index', {login, user_id, projects, api_token, api_port, search_id});
 	});
 	
 })
@@ -71,12 +78,14 @@ router.get('/detail', function(req, res, next){
 	var sess = req.session;
 	var login = sess.login;
 	var pnum = req.query.pnum;
-	query_project('loadProjectdetail', ['pnum', pnum], function(data, statusCode){
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	query_project(api_token, api_port, 'loadProjectdetail', ['pnum', pnum], function(data, statusCode){
 		var result = data;
 		var code = statusCode; 
 		var result_json = JSON.parse(result);
 		console.log('status code : ' + code);
-		sess.project = result_json
+		sess.project = result_json;
 		res.redirect('/project/description?pnum='+pnum);
 	});
 })
@@ -85,8 +94,11 @@ router.get('/description', function(req, res, next){
 	var sess = req.session;
 	var login = sess.login;
 	var token = sess.token;
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
 	var project = sess.project;
-	res.render('project/description', {login, project});
+	var user_id = sess.user_id;
+	res.render('project/description', {login, user_id, project, api_token, api_port});
 })
 
 router.get('/appraise', function(req, res, next){
@@ -95,13 +107,16 @@ router.get('/appraise', function(req, res, next){
 	var token = sess.token;
 	var project = sess.project;
 	var pnum = project.Pnum;
-
-	query_project('requestedConlist', ['token', token, 'pnum', ''+pnum], function(data, statusCode){
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	var user_id = sess.user_id;
+	query_project(api_token, api_port, 'requestedConlist', ['token', token, 'pnum', ''+pnum], function(data, statusCode){
+		console.log('pnum : '+ pnum);
 		var result = data;
 		var code = statusCode; 
 		var request_list = JSON.parse(result);
 		console.log('status code : ' + code);
-		res.render('project/appraise', {login, request_list, project});
+		res.render('project/appraise', {login, user_id, request_list, project, api_token, api_port});
 	});
 	
 })
@@ -113,8 +128,11 @@ router.post('/affraise', function(req, res, next){
 	var project = sess.project;
 	var pnum = project.Pnum;
 	var pdes = req.body.contribution
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
 
-	invoke_project('addContribution', ['token', token, 'pnum', ''+pnum, 'pdes', pdes], function(statusCode){
+	invoke_project(api_token, api_port, 'addContribution', ['token', token, 'pnum', ''+pnum, 'pdes', pdes], function(statusCode){
+		console.log('pnum : '+ pnum);
 		var code = statusCode;
 
 		console.log("status_code : " + code);
@@ -128,14 +146,18 @@ router.get('/contributes', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var project = sess.project;
-	var pnum = project.pnum;
+	var pnum = project.Pnum;
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	var user_id = sess.user_id;
 
-	query_project('allacceptedConlist', ['pnum', ''+pnum], function(data, statusCode){
+	query_project(api_token, api_port, 'allacceptedConlist', ['pnum', ''+pnum], function(data, statusCode){
+		console.log('pnum : '+ pnum);
 		var result = data;
 		var code = statusCode; 
 		var accepted_list = JSON.parse(result);
 		console.log('status code : ' + code);
-		res.render('project/contributes', {login, accepted_list ,project});
+		res.render('project/contributes', {login, user_id, accepted_list ,project, api_token, api_port});
 	});
 })
 
@@ -144,8 +166,10 @@ router.get('/contributors', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var project = sess.project;
-	
-	res.render('project/contributors', {login, project});
+	var user_id = sess.user_id;
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	res.render('project/contributors', {login, user_id, project, api_token, api_port});
 })
 
 
@@ -154,7 +178,9 @@ router.get('/addproject', function(req, res, next){
 	var login = sess.login;
 	var token = sess.token;
 	var user_id = sess.user_id;
-	res.render('project/addproject', {login, user_id});
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	res.render('project/addproject', {login, user_id, api_token, api_port});
 })
 
 router.post('/addproject', function(req, res, next){
@@ -164,7 +190,9 @@ router.post('/addproject', function(req, res, next){
 	var pname = req.body.project_name;
 	var pdes  = req.body.project_description;
 	var contributors = req.body.contributor_list;
-	invoke_project('addProject', ['token', token, 'pname', pname, 'pdes', pdes, 'contributors', contributors], function(data, statusCode){
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	invoke_project(api_token, api_port, 'addProject', ['token', token, 'pname', pname, 'pdes', pdes, 'contributors', contributors], function(data, statusCode){
 		var result = data;
 		var code = statusCode;
 
@@ -183,8 +211,10 @@ router.get('/accept', function(req, res, next){
 	var pnum = req.query.pnum;
 	console.log('accept token : ' + token);
 	console.log('accept pnum : '+ pnum);
-	
-	invoke_project('acceptProject', ['token', token, 'pnum',pnum], function(statusCode){
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+
+	invoke_project(api_token, api_port, 'acceptProject', ['token', token, 'pnum',pnum], function(statusCode){
 		var code = statusCode;
 		console.log("status_code : " + code);
 		res.redirect('/project?user_id='+sess.user_id);
@@ -196,9 +226,12 @@ router.get('/accept_contribution', function(req, res, next){
 	var token = sess.token;
 	var project = sess.project;
 	var pnum = project.Pnum;
-	var pindex = req.body.pindex;
+	var pindex = req.query.pindex;
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
 	
-	invoke_project('acceptContribution', ['token', token, 'pnum',''+pnum, 'pindex', ''+pindex], function(statusCode){
+	invoke_project(api_token, api_port, 'acceptContribution', ['token', token, 'pnum',''+pnum, 'pindex', ''+pindex], function(statusCode){
+		console.log('pnum : '+ pnum);
 		var code = statusCode;
 		console.log("status_code : " + code);
 		res.redirect('/project/appraise?pnum='+pnum);

@@ -52,14 +52,39 @@ header
               form
                 .form-group
                   .input-group
-                    input.form-control(type='text', placeholder='Contributor')
+                    input#search_input.form-control(type='text', placeholder='Contributor')
                     .input-group-append
-                      button.btn.btn-secondary(type='submit') Search
+                      button.btn.btn-secondary(type='button', onclick='click_search()') Search
+            script(type='text/javascript').
+              function click_search(){
+                var headers = {}; 
+                headers["Authorization"]="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgxNTM4MjYsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgxMTc4MjZ9.0hlySqZgftWlIx6jn3DywPUqWTLAHAIrFO0KvGwUxoo"; 
+                headers["Content-Type"]="application/json";
+                var id = $("#search_input").val();
+                $.ajax({
+                  method:"GET",
+                  headers : headers,
+                  async : false,
+                  url : 'http://52.79.245.63:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
+                  success:function(response){
+                    var response_json = JSON.stringify(response);
+                    if(response == ""){
+                      location.href = "/project?user_id="+id;
+                    }else{
+                      alert('존재하지 않는 사용자 입니다.');
+                    }
+                    
+                  },
+                  error:function(request,status,error){
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+                });
+              }
           if(login)
             li.nav-item
-              a.nav-link.js-scroll-trigger(href='/portfolio') Portfolio
+              a.nav-link.js-scroll-trigger(href='/portfolio?user_id='+user_id) Portfolio
             li.nav-item
-              a.nav-link.js-scroll-trigger(href='/project') Project
+              a.nav-link.js-scroll-trigger(href='/project?user_id='+user_id) Project
             li.nav-item
               a.nav-link.js-scroll-trigger(href='/blockchain?cur=1') Blockchain
 .content.mb-5

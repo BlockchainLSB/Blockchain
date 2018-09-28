@@ -6,18 +6,17 @@ var temp;
 /* json 파일 object 파일로 변환 */
 var object = {};
 
-var api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgwNzEwODIsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgwMzUwODJ9.wTjV_5A75jnPQ75cl02_cs1IWDq6PbPAtY0eJf_J8a0";
-var api_port = "4000";
-
-var jsonheaders = {
-					"Authorization": "Bearer " + api_token,
-					"Content-Type" : "application/json"
-					};
-object.headers = jsonheaders;
 
 
-var invoke_user = function(fcn, args, callback){
-	
+
+var invoke_user = function(api_token, api_port, fcn, args, callback){
+	var jsonheaders = {
+		"Authorization": "Bearer " + api_token,
+		"Content-Type" : "application/json"
+		};
+	object.headers = jsonheaders;
+
+
 	var api_url = 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc'; 
 	var jsonContent = {
 						'peers' : ["peer0.org1.example.com","peer1.org1.example.com"],
@@ -36,7 +35,13 @@ var invoke_user = function(fcn, args, callback){
 	});
 }
 
-var query_user = function(fcn, args, callback){
+var query_user = function(api_token, api_port,fcn, args, callback){
+	var jsonheaders = {
+		"Authorization": "Bearer " + api_token,
+		"Content-Type" : "application/json"
+		};
+	object.headers = jsonheaders;
+
 	var api_url = 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn='+fcn+'&args='+JSON.stringify(args||null);
 
 	
@@ -51,7 +56,9 @@ var query_user = function(fcn, args, callback){
 router.get('/signup', function(req, res, next){
 	var sess = req.session;
 	var login = sess.login;
-	res.render('user/signup', {login});
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	res.render('user/signup', {login, api_token, api_port});
 })
 
 router.post('/signup', function(req, res, next){
@@ -59,13 +66,25 @@ router.post('/signup', function(req, res, next){
 	var login = sess.login;
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
-	
-	query_user('searchUser', ['id', id], function(data, statusCode){
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+
+	var name = req.body.user_name;
+	var email = req.body.user_email;
+	var school = req.body.user_school;
+	var major = req.body.user_major;
+	var toeic = req.body.user_toeic;
+	var toeic_speaking = req.body.user_speaking;
+	var topcit = req.body.user_topcit;
+	query_user(api_token, api_port, 'searchUser', ['id', id], function(data, statusCode){
 		var result = data;
 		var code = statusCode; 
 		//var result_json = JSON.parse(result);
 		if(result.indexOf('Error') != -1){ 
-			invoke_user('signup', ['id', id,'pw', passwd], function(statusCode){
+			invoke_user(api_token, api_port, 'signup', ['id', id,'pw', passwd,
+											'email', email, 'name', name, 'toeic', toeic, 'topcit', topcit,
+											'toeic_speaking', toeic_speaking, 'school', school, 'major', major],
+												 function(statusCode){
 				var code = statusCode;
 				console.log("search user status_code : " + code);
 				console.log(data);
@@ -74,7 +93,7 @@ router.post('/signup', function(req, res, next){
 		}else{
 			console.log("search user code : " + code);
 			console.log('존재하는 id');
-			res.render('user/signup', {error : '존재하는 id', login});
+			res.render('user/signup', {error : '존재하는 id', login, api_token, api_port});
 		}
 	});
 /*
@@ -84,11 +103,14 @@ router.post('/signup', function(req, res, next){
 router.post('/signin', function(req, res, next){
 	var id = req.body.user_id;
 	var passwd = req.body.user_passwd;
-	invoke_user('signin', ['id', id,'pw', passwd], function(statusCode){
+	var sess = req.session;
+	var api_token = sess.api_token;
+	var api_port = sess.api_port;
+	invoke_user(api_token, api_port,'signin', ['id', id,'pw', passwd], function(statusCode){
 		var code = statusCode;
 		console.log("sign in status_code : " + code);
 		
-		query_user('getToken', ['id' , id, 'pw', passwd], function(data, statusCode){
+		query_user(api_token, api_port,'getToken', ['id' , id, 'pw', passwd], function(data, statusCode){
 			var result = data;
 			var code = statusCode;
 			
