@@ -30,7 +30,7 @@ header
               button.btn.btn-secondary(href='/#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
                 | Login
               .dropdown-menu.p-3(style='width:200px')
-                form(action='/user/signin', method='post')
+                form(action='/user/signin', method='post', onsubmit="check_login('"+api_token+"', "+api_port+")")
                   .form-group
                     .input-group.mb-1
                       .input-group-prepend
@@ -45,6 +45,36 @@ header
                         button#btn_signin.btn.btn-secondary(type='submit') SignIn
                       .input-group-append
                         a#btn_signup.btn.btn-secondary(href='/user/signup') SignUp
+            script(type='text/javascript').
+              function check_login(api_token, api_port){
+                var headers = {}; 
+                headers["Authorization"]="Bearer "+api_token; 
+                headers["Content-Type"]="application/json";
+                var id = $("#user_id").val();
+                var passwd = $('#user_passwd').val();
+                var is_success = false;
+                $.ajax({
+                  method:"GET",
+                  headers : headers,
+                  async : false,
+                  url : 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=getToken&args='+JSON.stringify(['id', id, 'passwd', passwd]||null),
+                  success:function(response){
+                    var response_json = JSON.stringify(response);
+                    if(response_json.indexOf('Error') != -1){
+                      alert('잘못된 로그인 정보');
+                    }else{
+                      alert('로그인 성공');
+                      is_success = true;
+                    }
+                    
+                  },
+                  error:function(request,status,error){
+                    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+                });
+
+                return is_success;
+              }
           li.nav-item.dropdown
             a.nav-link(data-toggle='dropdown')
               i.fas.fa-search
@@ -54,18 +84,18 @@ header
                   .input-group
                     input#search_input.form-control(type='text', placeholder='Contributor')
                     .input-group-append
-                      button.btn.btn-secondary(type='button', onclick='click_search()') Search
+                      button.btn.btn-secondary(type='button', onclick="click_search('"+api_token+"', "+api_port+")") Search
             script(type='text/javascript').
-              function click_search(){
+              function click_search(api_token, api_port){
                 var headers = {}; 
-                headers["Authorization"]="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgxNTM4MjYsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgxMTc4MjZ9.0hlySqZgftWlIx6jn3DywPUqWTLAHAIrFO0KvGwUxoo"; 
+                headers["Authorization"]="Bearer "+api_token; 
                 headers["Content-Type"]="application/json";
                 var id = $("#search_input").val();
                 $.ajax({
                   method:"GET",
                   headers : headers,
                   async : false,
-                  url : 'http://52.79.245.63:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
+                  url : 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
                   success:function(response){
                     var response_json = JSON.stringify(response);
                     if(response == ""){

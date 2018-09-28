@@ -5,7 +5,7 @@ block content
     if(search_id == user_id)
       a.btn.btn-secondary.mb-3(href='/project/addproject') Add Project
     else
-      a.btn.btn-secondary.mb-3(href='/portfolio?user_id='+user_id) View Portfolio
+      a.btn.btn-secondary.mb-3(href='/portfolio?user_id='+search_id) View Portfolio
     .row.justify-content-start.pr-6.pl-6
       if(projects != null)
         each val in projects 

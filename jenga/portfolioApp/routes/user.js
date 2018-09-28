@@ -79,7 +79,6 @@ router.post('/signup', function(req, res, next){
 	query_user(api_token, api_port, 'searchUser', ['id', id], function(data, statusCode){
 		var result = data;
 		var code = statusCode; 
-		//var result_json = JSON.parse(result);
 		if(result.indexOf('Error') != -1){ 
 			invoke_user(api_token, api_port, 'signup', ['id', id,'pw', passwd,
 											'email', email, 'name', name, 'toeic', toeic, 'topcit', topcit,

@@ -19,19 +19,19 @@ block content
               .input-group.mb-3
                 input#contributor_input.form-control(type='text', placeholder='Contributor') 
                 .input-group-append
-                  button.btn.btn-secondary(type='button', onclick='contributor_click()') search
+                  button.btn.btn-secondary(type='button', onclick="click_search('"+api_token+"', "+api_port+")") search
             input#contributor_list.form-control(type='text', placeholder='Contributor', value=user_id, name='contributor_list', style='display : none;') 
             script(type='text/javascript').
-              function contributor_click(){
+              function click_search(api_token, api_port){
                 var headers = {}; 
-                headers["Authorization"]="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzgxNTM4MjYsInVzZXJuYW1lIjoiSmltIiwib3JnTmFtZSI6Ik9yZzEiLCJpYXQiOjE1MzgxMTc4MjZ9.0hlySqZgftWlIx6jn3DywPUqWTLAHAIrFO0KvGwUxoo"; 
+                headers["Authorization"]="Bearer " + api_token; 
                 headers["Content-Type"]="application/json";
                 var id = $("#contributor_input").val();
                 $.ajax({
                   method:"GET",
                   headers : headers,
                   async : false,
-                  url : 'http://52.79.245.63:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
+                  url : 'http://52.79.245.63:'+api_port+'/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=searchUser&args='+JSON.stringify(['id', id]||null),
                   success:function(response){
                     var response_json = JSON.stringify(response);
                     if(response == ""){

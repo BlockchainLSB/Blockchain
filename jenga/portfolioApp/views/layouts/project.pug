@@ -9,9 +9,12 @@ block content
       .col-md-2
           li.list-group-item
             a(href='/project/description?pnum='+project.Pnum, style='color:#000000') Description
-          li.list-group-item
-            a(href='/project/appraise?pnum='+project.Pnum, style='color:#000000') Affraise
-          li.list-group-item
+          each val in project.POkContributor
+            if(val.Cname == user_id)
+              li.list-group-item
+                a(href='/project/appraise?pnum='+project.Pnum, style='color:#000000') Affraise
+              break
+          li.list-group-item 
             a(href='/project/contributes?pnum='+project.Pnum, style='color:#000000') Contributes
           li.list-group-item
             a(href='/project/contributors?pnum='+project.Pnum, style='color:#000000') Contributors
