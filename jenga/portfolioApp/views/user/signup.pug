@@ -85,12 +85,12 @@ block content
                 });
               }
               function confirm_passwd(){
-                var passwd = $('#sign_passwd');
-                var confirm = $('#passwd_confirm');
+                var passwd = $('#sign_passwd').val();
+                var confirm = $('#password_confirm').val();
                 if(passwd == confirm){
                   return true;
                 }else{
-                  alert("비밀번호 확인이 다릅니다.")
+                  alert("비밀번호 확인이 다릅니다.");
                   return false;
                 }
               }
